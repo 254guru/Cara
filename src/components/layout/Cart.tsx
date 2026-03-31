@@ -10,27 +10,25 @@ export default function Cart() {
 
   function handleCheckout() {
     if (state.items.length === 0) {
-      alert("Your Cart Is Empty! 'add products to cart'");
+      alert('Your cart is empty. Add a product before checkout.');
       return;
     }
     clearCart();
-    alert('Successfully Checked Out!');
+    alert('Order placed. Thank you for shopping with Cara.');
   }
 
   return (
-    <section className={`scrollbar-y cart${state.isOpen ? ' showCart' : ''}`} id="cart-items">
+    <section className={`cart${state.isOpen ? ' showCart' : ''}`} id="cart-items" aria-label="Shopping cart">
       <div className="cart-title">
-        <h2>your cart</h2>
-        <i
-          className="fas fa-times"
-          id="close-cart"
-          onClick={closeCart}
-          style={{ cursor: 'pointer' }}
-          role="button"
-          aria-label="Close cart"
-        />
+        <h2>Your cart</h2>
+        <button className="icon-btn" id="close-cart" onClick={closeCart} aria-label="Close cart" type="button">
+          <i className="fas fa-times" />
+        </button>
       </div>
       <div className="cart-content" id="cartContent">
+        {state.items.length === 0 && (
+          <p className="empty-message">No items yet. Explore products and start building your kit.</p>
+        )}
         {state.items.map((item) => (
           <div className="cart-box" key={item.id}>
             <Image src={item.image} alt={item.title} width={80} height={80} className="cart-img" />
@@ -42,6 +40,7 @@ export default function Cart() {
                   name="size"
                   value={item.size}
                   onChange={(e) => updateSize(item.id, e.target.value)}
+                  aria-label={`Size for ${item.title}`}
                 >
                   {PRODUCT_SIZES.map((s) => (
                     <option key={s} value={s}>{s}</option>
@@ -54,42 +53,41 @@ export default function Cart() {
                 min={1}
                 className="cart-quantity"
                 onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
+                aria-label={`Quantity for ${item.title}`}
               />
             </div>
-            <i
-              className="fas fa-trash remove-items"
-              onClick={() => removeItem(item.id)}
-              style={{ cursor: 'pointer' }}
-              role="button"
-              aria-label={`Remove ${item.title}`}
-            />
+            <button className="icon-btn remove-items" onClick={() => removeItem(item.id)} type="button" aria-label={`Remove ${item.title}`}>
+              <i className="fas fa-trash" />
+            </button>
           </div>
         ))}
       </div>
       <div className="item-summary">
         <div className="top">
-          <div className="summary"><h2>items summary</h2></div>
+          <div className="summary"><h2>Order summary</h2></div>
           <div className="details">
-            <h2 id="itemB">item(s)</h2>
+            <h2 id="itemB">Items ({state.items.length})</h2>
             <h2 className="totalA">{formatPrice(total)}</h2>
           </div>
           <div className="coupon">
-            <h2>shipping</h2>
+            <h2>Shipping</h2>
             <select name="delivery" id="select-del">
               {SHIPPING_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
-            <h2>promo code</h2>
-            <input type="text" placeholder="enter your promo code" id="promoCode" />
-            <button className="promo-btn">apply</button>
+            <h2>Promo code</h2>
+            <div className="promo-field">
+              <input type="text" placeholder="Enter promo code" id="promoCode" />
+              <button className="promo-btn" type="button">Apply</button>
+            </div>
           </div>
           <div className="total">
-            <h2>total</h2>
+            <h2>Total</h2>
             <h2 className="totalB">{formatPrice(total)}</h2>
           </div>
           <div className="checkout">
-            <button className="checkOut" onClick={handleCheckout}>check out</button>
+            <button className="checkOut" onClick={handleCheckout}>Secure checkout</button>
           </div>
         </div>
       </div>

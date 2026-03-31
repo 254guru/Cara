@@ -1,10 +1,17 @@
 import Image from 'next/image';
 import Newsletter from '@/components/sections/Newsletter';
 import FeaturesSection from '@/components/sections/FeaturesSection';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
-export const metadata = {
-  title: 'Cara Store - About',
-  description: 'All you need to know about us',
+export const metadata: Metadata = {
+  title: 'About',
+  description: 'Meet Cara Studio: a mobile-first fashion brand blending editorial storytelling with practical everyday wear.',
+  openGraph: {
+    title: 'About Cara Studio',
+    description: 'Learn the vision, craft, and culture behind Cara Studio.',
+    images: ['/about-img/a6.jpg'],
+  },
 };
 
 export default function AboutPage() {
@@ -13,8 +20,9 @@ export default function AboutPage() {
       <section className="about-banner">
         <div className="banner">
           <div className="content">
-            <h1>#KnowUs</h1>
-            <p>all you need to know about us here!</p>
+            <span className="pill">Inside Cara</span>
+            <h1>Built by people who live in motion</h1>
+            <p>We design with one goal: premium style that feels effortless from morning commute to late-night plans.</p>
           </div>
         </div>
       </section>
@@ -25,24 +33,30 @@ export default function AboutPage() {
             <Image src="/about-img/a6.jpg" alt="About Cara Store" width={500} height={400} />
           </div>
           <div className="box text">
-            <h1>who we are?</h1>
+            <h1>Who we are</h1>
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil distinctio excepturi ad architecto,
-              beatae vel deleniti quis ab incidunt illo eligendi accusamus in aut. Explicabo officiis consequuntur
-              illo omnis nemo commodi soluta atque saepe esse. Repudiandae vel aperiam qui fugit.
+              Cara started as a small design collective focused on one challenge: making quality pieces that perform
+              on mobile-first lifestyles. We build limited capsules that balance comfort, durability, and elevated cuts.
             </p>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti, asperiores quae reiciendis sequi
-              architecto enim ratione dicta voluptas. Ipsum sit illum quod repudiandae. Incidunt provident deserunt,
-              voluptatum amet totam aut.
+              Every release is tested by our in-house team across fit sessions, wash cycles, and real-day wear,
+              ensuring each product feels intentional from first try-on to final delivery.
             </p>
+            <div className="cta-row">
+              <Link href="/shop" className="btn-primary">Shop the latest drop</Link>
+              <Link href="/contact" className="btn-secondary">Partner with us</Link>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="video">
         <div className="video-desc">
-          <h1>download our <a href="#">app</a></h1>
+          <div className="section-heading">
+            <span className="pill">Behind the scenes</span>
+            <h2>From sketch to street</h2>
+            <p>Take a quick look at our creative process and how each collection comes to life.</p>
+          </div>
         </div>
         <div className="video-play">
           <video src="/about-img/1.mp4" autoPlay loop muted playsInline />

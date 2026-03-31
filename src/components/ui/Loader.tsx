@@ -15,7 +15,9 @@ export default function Loader() {
 
   return (
     <div className="loader-container">
-      <Image src="/extra-img/giphy.webp" alt="Loading..." width={80} height={80} unoptimized />
+      <div className="loader-ring" aria-label="Loading">
+        <Image src="/extra-img/giphy.webp" alt="Loading" width={54} height={54} unoptimized />
+      </div>
     </div>
   );
 }

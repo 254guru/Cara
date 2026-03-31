@@ -36,7 +36,6 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                       width={80}
                       height={80}
                       onClick={() => setMainImg(src)}
-                      style={{ cursor: 'pointer' }}
                     />
                   </div>
                 ))}
@@ -57,13 +56,20 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 <option key={size} value={size}>{size}</option>
               ))}
             </select>
-            <div className="btn-group" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-              <button className="addBtn" onClick={() => addItem(product)}>add to cart</button>
-              <Link href="/shop" className="btn">back to shop</Link>
+            <div className="btn-group">
+              <button className="addBtn" onClick={() => addItem(product)}>Add to cart</button>
+              <Link href="/shop" className="btn">Back to shop</Link>
             </div>
-            <p style={{ marginTop: '1rem', color: '#777', lineHeight: 1.7 }}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis saepe optio vel labore iusto exercitationem non laudantium id ea, molestias doloremque fugit praesentium corporis dolorum distinctio!
+            <p>
+              Crafted for daily wear, this piece features breathable fabric, a clean silhouette, and elevated finishing.
+              Pair it with relaxed denim, layered outerwear, or minimal sneakers for a versatile city-ready look.
             </p>
+            <div className="kpi-grid" style={{ marginTop: '1rem' }}>
+              <div className="kpi-card"><strong>Free</strong><p>Shipping over $120</p></div>
+              <div className="kpi-card"><strong>14 days</strong><p>Easy returns</p></div>
+              <div className="kpi-card"><strong>Secure</strong><p>Encrypted checkout</p></div>
+              <div className="kpi-card"><strong>Support</strong><p>Live chat daily</p></div>
+            </div>
           </div>
         </div>
       </section>

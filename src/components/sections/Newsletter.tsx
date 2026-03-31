@@ -8,7 +8,7 @@ export default function Newsletter() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
-    alert(`Thank you for subscribing with ${email}!`);
+    alert(`You are on the list, ${email}. Watch your inbox for launch drops.`);
     setEmail('');
   }
 
@@ -16,18 +16,20 @@ export default function Newsletter() {
     <section className="newsletter" id="newsletter">
       <div className="content">
         <div className="news">
-          <h1>sign up for newsletters</h1>
-          <p>get e-mail updates about our latest shop and <span>special offers.</span></p>
+          <span className="pill">VIP Access</span>
+          <h1>Get early access to every collection</h1>
+          <p>Join 20,000+ shoppers receiving drop alerts, product stories, and <span>members-only offers.</span></p>
         </div>
         <form className="input" onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Your email address"
+            placeholder="name@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            aria-label="Email address"
           />
-          <button type="submit" className="btn">sign up</button>
+          <button type="submit" className="btn">Join free</button>
         </form>
       </div>
     </section>

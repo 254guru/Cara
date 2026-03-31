@@ -19,7 +19,7 @@ export default function ProductCard({ product, showAddToCart = false, linkTo = '
   return (
     <div className={`box${showAddToCart ? ' box-content' : ''}`}>
       <div className="image">
-        <Link href={linkTo}>
+        <Link href={linkTo} aria-label={`View ${product.title}`}>
           <Image
             src={product.image}
             alt={product.title}
@@ -33,26 +33,18 @@ export default function ProductCard({ product, showAddToCart = false, linkTo = '
       <div className={`content${showAddToCart ? ' shop-content' : ''}`}>
         <h3>{product.brand}</h3>
         <p className={showAddToCart ? 'product-title' : ''}>{product.title}</p>
-        {!showAddToCart && (
-          <div className="stars">
-            {stars.map((cls, i) => <i key={i} className={cls} />)}
-          </div>
-        )}
+        <div className="stars" aria-label={`Rated ${product.rating} out of 5`}>
+          {stars.map((cls, i) => <i key={i} className={cls} />)}
+        </div>
         <div className="price">
           <h6 id="prices">{formatPrice(product.price)}</h6>
-          <span>
-            <i
-              className="fas fa-shopping-cart"
-              onClick={() => addItem(product)}
-              style={{ cursor: 'pointer' }}
-              role="button"
-              aria-label={`Add ${product.title} to cart`}
-            />
-          </span>
+          <button className="icon-btn-small" onClick={() => addItem(product)} type="button" aria-label={`Add ${product.title} to cart`}>
+            <i className="fas fa-shopping-bag" />
+          </button>
         </div>
       </div>
       {showAddToCart && (
-        <button className="addBtn" onClick={() => addItem(product)}>add to cart</button>
+        <button className="addBtn" onClick={() => addItem(product)} type="button">Add to cart</button>
       )}
     </div>
   );

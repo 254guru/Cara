@@ -3,10 +3,16 @@ import Newsletter from '@/components/sections/Newsletter';
 import FeaturesSection from '@/components/sections/FeaturesSection';
 import ProductCard from '@/components/ui/ProductCard';
 import { getFeaturedProducts, getNewArrivals } from '@/services/productService';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: 'Cara Store',
-  description: 'An e-commerce website — save more with coupons & up to 70% off!',
+export const metadata: Metadata = {
+  title: 'Homepage',
+  description: 'Shop curated everyday pieces with mobile-first browsing, instant cart actions, and weekly style drops.',
+  openGraph: {
+    title: 'Cara Studio Homepage',
+    description: 'Discover top picks, fresh arrivals, and seasonal collections from Cara Studio.',
+    images: ['/banner-img/b2.jpg'],
+  },
 };
 
 export default function HomePage() {
@@ -16,20 +22,34 @@ export default function HomePage() {
   return (
     <>
       <section className="home" id="home">
-        <div className="content">
-          <h4>trade-in-offer</h4>
-          <h2>Super value deals</h2>
-          <h1>On all products</h1>
-          <p>Save more with coupons &amp; up to 70% off!</p>
-          <Link href="/shop"><button>shop now</button></Link>
+        <div className="hero-shell">
+          <div className="content">
+            <span className="pill">Spring 2026 Drop</span>
+            <h2>Built for scroll speed</h2>
+            <h1>Dress better, faster</h1>
+            <p>Discover premium essentials curated for movement, comfort, and bold everyday styling.</p>
+            <div className="cta-row">
+              <Link href="/shop" className="btn-primary">Shop collection</Link>
+              <Link href="/about" className="btn-secondary">Our story</Link>
+            </div>
+            <div className="kpi-grid" aria-label="Store highlights">
+              <div className="kpi-card"><strong>24h</strong><p>Dispatch on most orders</p></div>
+              <div className="kpi-card"><strong>16k+</strong><p>Happy mobile shoppers</p></div>
+              <div className="kpi-card"><strong>4.9/5</strong><p>Average review score</p></div>
+              <div className="kpi-card"><strong>Easy</strong><p>Returns within 14 days</p></div>
+            </div>
+          </div>
         </div>
       </section>
 
       <FeaturesSection />
 
       <section className="products" id="products">
-        <h1 className="heading">featured products</h1>
-        <h4 className="sub-heading">Summer collections new modern design</h4>
+        <div className="section-heading">
+          <span className="pill">Top Picks</span>
+          <h2>Featured right now</h2>
+          <p>Editor-approved essentials that pair clean lines with all-day comfort.</p>
+        </div>
         <div className="box-container">
           {featuredProducts.map((p) => (
             <ProductCard key={p.id} product={p} linkTo="/shop" />
@@ -39,15 +59,21 @@ export default function HomePage() {
 
       <section className="banner" id="banner">
         <div className="content">
-          <h4>repair services</h4>
-          <p>up to <span>70% off</span> - all t-shirts &amp; accessories</p>
-          <Link href="/shop" className="btn">explore more</Link>
+          <span className="pill">Limited Time</span>
+          <h1>Seasonal markdown event</h1>
+          <p>Save up to <span>70% off</span> selected essentials and accessories.</p>
+          <div className="cta-row" style={{ justifyContent: 'center' }}>
+            <Link href="/shop" className="btn">Explore deals</Link>
+          </div>
         </div>
       </section>
 
       <section className="arrivals" id="arrivals">
-        <h1 className="heading">new arrivals</h1>
-        <h4 className="sub-heading">Summer collections new modern design</h4>
+        <div className="section-heading">
+          <span className="pill">Just In</span>
+          <h2>New arrivals this week</h2>
+          <p>Fresh silhouettes and color stories dropping every Friday at noon.</p>
+        </div>
         <div className="box-container">
           {newArrivals.map((p) => (
             <ProductCard key={p.id} product={p} linkTo="/shop" />
@@ -59,25 +85,25 @@ export default function HomePage() {
         <div className="ad-container-1">
           <div className="box ad-1">
             <div className="content">
-              <h4>crazy deals</h4>
-              <h1>buy 1 get 1 free</h1>
-              <p>The best classic dress is on sale at cara</p>
-              <Link href="/shop" className="ad-btn">learn more</Link>
+              <h4>Members perk</h4>
+              <h1>Buy 1, get 1 50% off</h1>
+              <p>Stack your wardrobe with bundle pricing on selected pieces.</p>
+              <Link href="/shop" className="ad-btn">Unlock offer</Link>
             </div>
           </div>
           <div className="box ad-2">
             <div className="content">
-              <h4>spring/summer</h4>
-              <h1>upcoming season</h1>
-              <p>The best classic dress is on sale at cara</p>
-              <Link href="/shop" className="ad-btn">continue</Link>
+              <h4>Spring / Summer</h4>
+              <h1>Lightweight layers</h1>
+              <p>Ready-to-wear cuts designed for warm city days.</p>
+              <Link href="/shop" className="ad-btn">Shop now</Link>
             </div>
           </div>
         </div>
         <div className="ad-container-2">
-          <div className="box ad-1"><div className="content"><h1>season sale</h1><p>winter collection - 50% OFF</p></div></div>
-          <div className="box ad-2"><div className="content"><h1>new footwear collection</h1><p>spring / summer 2024</p></div></div>
-          <div className="box ad-3"><div className="content"><h1>t-shirts</h1><p>new trendy prints</p></div></div>
+          <div className="box ad-1"><div className="content"><h1>Season closeout</h1><p>Last chance pieces up to 50% off</p></div></div>
+          <div className="box ad-2"><div className="content"><h1>Footwear capsule</h1><p>Comfort-driven silhouettes in stock now</p></div></div>
+          <div className="box ad-3"><div className="content"><h1>Graphic tees</h1><p>New prints inspired by street culture</p></div></div>
         </div>
       </section>
 

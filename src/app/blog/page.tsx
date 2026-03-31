@@ -2,10 +2,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Newsletter from '@/components/sections/Newsletter';
 import { getBlogPosts } from '@/services/blogService';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: 'Cara Store - Blog',
-  description: 'Read all case studies about our products',
+export const metadata: Metadata = {
+  title: 'Journal',
+  description: 'Read Cara Studio journal stories on styling, trends, fit tips, and seasonal collections.',
+  openGraph: {
+    title: 'Cara Studio Journal',
+    description: 'Styling insights and behind-the-scenes stories from the Cara team.',
+    images: ['/blog-img/b1.jpg'],
+  },
 };
 
 export default function BlogPage() {
@@ -16,8 +22,9 @@ export default function BlogPage() {
       <section className="blog-banner">
         <div className="banner">
           <div className="content">
-            <h1>#readmore</h1>
-            <p>read all case studies about our products!</p>
+            <span className="pill">Editorial</span>
+            <h1>Stories from the studio</h1>
+            <p>Style notes, trend breakdowns, and practical guides for building your everyday wardrobe.</p>
           </div>
         </div>
       </section>
@@ -33,7 +40,7 @@ export default function BlogPage() {
               <div className="box blog">
                 <h2>{post.title}</h2>
                 <p>{post.excerpt}</p>
-                <Link href="#" className="btn-2">continue reading</Link>
+                <Link href="#" className="btn-2">Continue reading</Link>
               </div>
             </div>
           ))}
