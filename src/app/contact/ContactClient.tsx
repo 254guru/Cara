@@ -39,16 +39,16 @@ export default function ContactClient() {
         <div className="box-container">
           <div className="box text">
             <h3>Get in touch</h3>
-            <h1>Visit our NYC studio or reach out digitally</h1>
+            <h1>Visit our Nairobi studio or reach out digitally</h1>
             <h4>Head office</h4>
-            <div className="location"><i className="fas fa-map" /><span>54 Prince Street, Manhattan, New York, USA</span></div>
-            <div className="location"><i className="fas fa-envelope" /><span>support@carastudio.com</span></div>
-            <div className="location"><i className="fas fa-phone" /><span>+1 (212) 555-0184</span></div>
+            <div className="location"><i className="fas fa-map" /><span>Westlands, Nairobi, Kenya</span></div>
+            <div className="location"><i className="fas fa-envelope" /><span>support@carastudio.co.ke</span></div>
+            <div className="location"><i className="fas fa-phone" /><span>+254 712 345 678</span></div>
             <div className="location"><i className="fas fa-clock" /><span>Monday to Sunday, 9:00 AM - 8:00 PM</span></div>
           </div>
           <div className="box map">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387191.0361088591!2d-74.30933493197234!3d40.69753995657043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sng!4v1708628091313!5m2!1sen!2sng"
+              src="https://www.google.com/maps?q=Nairobi%2C%20Kenya&output=embed"
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -80,8 +80,8 @@ export default function ContactClient() {
                 <div className="text">
                   <h3>{person.name}</h3>
                   <p>{person.role}</p>
-                  <p>Phone: +1 (212) 555-0184</p>
-                  <p>Email: hello@carastudio.com</p>
+                  <p>Phone: +254 712 345 678</p>
+                  <p>Email: hello@carastudio.co.ke</p>
                 </div>
               </div>
             ))}

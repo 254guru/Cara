@@ -12,12 +12,12 @@ export const metadata: Metadata = {
     default: 'Cara Studio | Mobile-first Style Commerce',
     template: '%s | Cara Studio',
   },
-  description: 'Cara Studio is a modern, mobile-first fashion storefront with curated drops, fast checkout, and editorial storytelling.',
-  keywords: ['fashion', 'mobile commerce', 'streetwear', 'online boutique', 'shop'],
+  description: 'Cara Studio Kenya is a Nairobi-based, mobile-first fashion storefront with curated drops and mobile money checkout.',
+  keywords: ['fashion', 'mobile commerce', 'Nairobi', 'Kenya', 'M-Pesa', 'Airtel Money', 'streetwear', 'online boutique'],
   authors: [{ name: 'Cara Studio Team' }],
   openGraph: {
     title: 'Cara Studio | Mobile-first Style Commerce',
-    description: 'Curated apparel, weekly drops, and fast checkout designed for modern shoppers.',
+    description: 'Curated apparel from Nairobi with fast mobile checkout via M-Pesa and Airtel Money.',
     type: 'website',
     url: 'https://cara-store.example',
     siteName: 'Cara Studio',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Cara Studio | Mobile-first Style Commerce',
-    description: 'Curated apparel, weekly drops, and fast checkout designed for modern shoppers.',
+    description: 'Curated apparel from Nairobi with fast mobile checkout via M-Pesa and Airtel Money.',
     images: ['/banner-img/b1.jpg'],
   },
   alternates: {

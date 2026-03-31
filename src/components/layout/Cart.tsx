@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useCart } from '@/hooks/useCart';
-import { PRODUCT_SIZES, SHIPPING_OPTIONS } from '@/constants';
+import { PRODUCT_SIZES, SHIPPING_OPTIONS, PAYMENT_METHODS } from '@/constants';
 import { formatPrice } from '@/lib/utils';
 
 export default function Cart() {
@@ -14,7 +14,7 @@ export default function Cart() {
       return;
     }
     clearCart();
-    alert('Order placed. Thank you for shopping with Cara.');
+    alert('Order placed. Complete payment via M-Pesa or Airtel Money.');
   }
 
   return (
@@ -74,6 +74,12 @@ export default function Cart() {
             <select name="delivery" id="select-del">
               {SHIPPING_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+            <h2>Payment method</h2>
+            <select name="payment-method" id="payment-method">
+              {PAYMENT_METHODS.map((m) => (
+                <option key={m.value} value={m.value}>{m.label}</option>
               ))}
             </select>
             <h2>Promo code</h2>

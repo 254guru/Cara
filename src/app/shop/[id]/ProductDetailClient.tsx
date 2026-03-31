@@ -65,7 +65,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               Pair it with relaxed denim, layered outerwear, or minimal sneakers for a versatile city-ready look.
             </p>
             <div className="kpi-grid" style={{ marginTop: '1rem' }}>
-              <div className="kpi-card"><strong>Free</strong><p>Shipping over $120</p></div>
+              <div className="kpi-card"><strong>Free</strong><p>Shipping over KES 12,000</p></div>
               <div className="kpi-card"><strong>14 days</strong><p>Easy returns</p></div>
               <div className="kpi-card"><strong>Secure</strong><p>Encrypted checkout</p></div>
               <div className="kpi-card"><strong>Support</strong><p>Live chat daily</p></div>

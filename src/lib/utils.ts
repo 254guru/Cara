@@ -1,5 +1,9 @@
 export function formatPrice(price: number): string {
-  return `$${price.toFixed(2)}`;
+  return new Intl.NumberFormat('en-KE', {
+    style: 'currency',
+    currency: 'KES',
+    minimumFractionDigits: 2,
+  }).format(price);
 }
 
 export function buildStarClasses(fullRating: boolean, count: number = 5): string[] {

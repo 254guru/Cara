@@ -8,8 +8,8 @@ export default function Footer() {
         <div className="box">
           <Image src="/extra-img/logo.png" alt="Cara Store" width={120} height={40} />
           <h3>Visit Cara Studio</h3>
-          <p><span>Address:</span> 54 Prince Street, Manhattan, New York</p>
-          <p><span>Phone:</span> +1 (212) 555-0184</p>
+          <p><span>Address:</span> Westlands, Nairobi, Kenya</p>
+          <p><span>Phone:</span> +254 712 345 678</p>
           <p><span>Hours:</span> Mon - Sat, 9:00 AM to 7:00 PM</p>
           <div className="follow">
             <h3>Follow Us</h3>
@@ -38,14 +38,11 @@ export default function Footer() {
           <Link href="/contact">Support center</Link>
         </div>
         <div className="box">
-          <h3>Get The App</h3>
-          <p>Install Cara for exclusive drops, early access, and one-tap checkout.</p>
-          <div className="foot-img">
-            <Image src="/pay-img/app.jpg" alt="App Store" width={120} height={40} />
-            <Image src="/pay-img/play.jpg" alt="Google Play" width={120} height={40} />
-          </div>
-          <p>Trusted secure checkout</p>
-          <Image src="/pay-img/pay.png" alt="Payment methods" width={200} height={40} />
+          <h3>Payment options</h3>
+          <p>Cara Kenya currently accepts mobile money only.</p>
+          <p><strong>M-Pesa</strong></p>
+          <p><strong>Airtel Money</strong></p>
+          <p>Card and bank payments are not supported on this platform.</p>
         </div>
       </div>
       <div className="credit">
