@@ -1,4 +1,4 @@
-import { getAllProductIds, getProductById } from '@/services/productService';
+import { getAllProductIds, getProductByIdFromDB } from '@/services/productService';
 import ProductDetailClient from './ProductDetailClient';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -11,7 +11,7 @@ export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
 ): Promise<Metadata> {
   const { id } = await params;
-  const product = getProductById(parseInt(id, 10));
+  const product = await getProductByIdFromDB(parseInt(id, 10));
 
   if (!product) {
     return {
@@ -37,7 +37,7 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = getProductById(parseInt(id, 10));
+  const product = await getProductByIdFromDB(parseInt(id, 10));
   if (!product) notFound();
   return <ProductDetailClient product={product} />;
 }

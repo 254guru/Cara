@@ -7,21 +7,38 @@
     "images:optimize": "node scripts/optimize-images.cjs",
     "build": "npm run images:optimize && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "npx prisma migrate dev",
+    "db:push": "npx prisma db push",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:studio": "npx prisma studio",
+    "db:reset": "npx prisma migrate reset"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "bcryptjs": "^3.0.3",
     "next": "^15.5.14",
+    "next-auth": "^4.24.13",
+    "pdfkit": "^0.18.0",
+    "pg": "^8.20.0",
+    "prisma": "^7.6.0",
     "react": "^18",
     "react-dom": "^18",
     "swiper": "12.1.2"
   },
   "devDependencies": {
     "@254guru/webp-convert": "^2.4.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "^15.5.14",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

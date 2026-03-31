@@ -1,6 +1,6 @@
 import Newsletter from '@/components/sections/Newsletter';
 import ProductCard from '@/components/ui/ProductCard';
-import { getShopProducts } from '@/services/productService';
+import { getShopProductsFromDB } from '@/services/productService';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ShopPage() {
-  const shopProducts = getShopProducts();
+export default async function ShopPage() {
+  const shopProducts = await getShopProductsFromDB();
 
   return (
     <>

@@ -4,12 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/hooks/useCart';
 import { NAV_LINKS } from '@/constants';
 
 export default function Header() {
   const pathname = usePathname();
   const { itemCount, openCart } = useCart();
+  const { data: session } = useSession();
   const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
@@ -40,6 +42,26 @@ export default function Header() {
             ))}
           </nav>
           <div className="icons">
+            {session?.user ? (
+              <div className="auth-links">
+                <Link href="/orders" className="icon-btn" aria-label="My orders" title="My orders">
+                  <i className="fas fa-box" />
+                </Link>
+                <button
+                  className="icon-btn"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  type="button"
+                  aria-label="Sign out"
+                  title="Sign out"
+                >
+                  <i className="fas fa-sign-out-alt" />
+                </button>
+              </div>
+            ) : (
+              <Link href="/login" className="icon-btn" aria-label="Sign in" title="Sign in">
+                <i className="fas fa-user" />
+              </Link>
+            )}
             <button className="icon-btn" onClick={openCart} aria-label="Open cart" type="button">
               <i className="fas fa-shopping-bag" />
               <span className="cart-badge" aria-live="polite">{itemCount}</span>

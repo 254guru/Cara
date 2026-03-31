@@ -24,7 +24,7 @@ export default function HomePage() {
       <section className="home" id="home">
         <div className="hero-shell">
           <div className="content">
-            <span className="pill">Spring 2026 Drop</span>
+            <span className="pill">2026 Drop</span>
             <h2>Built for scroll speed</h2>
             <h1>Dress better, faster</h1>
             <p>Discover premium essentials curated for movement, comfort, and bold everyday styling.</p>

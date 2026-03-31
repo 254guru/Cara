@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import AuthProvider from '@/components/providers/AuthProvider';
 import { CartProvider } from '@/context/CartContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -44,13 +45,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
       <body>
-        <CartProvider>
-          <Header />
-          <main>{children}</main>
-          <Cart />
-          <Footer />
-          <Loader />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Header />
+            <main>{children}</main>
+            <Cart />
+            <Footer />
+            <Loader />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
