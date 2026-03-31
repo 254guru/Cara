@@ -2,10 +2,12 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Product } from '@/types';
-import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
-import Newsletter from '@/components/Newsletter';
+import { Product } from '@/types';
+import { useCart } from '@/hooks/useCart';
+import Newsletter from '@/components/sections/Newsletter';
+import { PRODUCT_SIZES } from '@/constants';
+import { buildStarClasses, formatPrice } from '@/lib/utils';
 
 const thumbnailImages = [
   '/products-img/p2.jpg', '/products-img/p3.jpg', '/products-img/p4.jpg',
@@ -15,6 +17,7 @@ const thumbnailImages = [
 export default function ProductDetailClient({ product }: { product: Product }) {
   const [mainImg, setMainImg] = useState(product.image);
   const { addItem } = useCart();
+  const stars = buildStarClasses(product.fullRating);
 
   return (
     <>
@@ -44,17 +47,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <h2 className="product-name">{product.title}</h2>
             <h3 className="product-brand">{product.brand}</h3>
             <div className="stars">
-              {Array.from({ length: 5 }, (_, i) => (
-                <i key={i} className={product.fullRating ? 'fas fa-star' : i < 4 ? 'fas fa-star' : 'fas fa-star-half-alt'} />
+              {stars.map((cls, i) => (
+                <i key={i} className={cls} />
               ))}
             </div>
-            <h2 className="product-price">${product.price}</h2>
+            <h2 className="product-price">{formatPrice(product.price)}</h2>
             <select name="size" className="product-size">
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-              <option value="XXL">XXL</option>
+              {PRODUCT_SIZES.map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
             </select>
             <div className="btn-group" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
               <button className="addBtn" onClick={() => addItem(product)}>add to cart</button>

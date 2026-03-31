@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/types';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '@/hooks/useCart';
+import { buildStarClasses, formatPrice } from '@/lib/utils';
 
 interface Props {
   product: Product;
@@ -13,11 +14,7 @@ interface Props {
 
 export default function ProductCard({ product, showAddToCart = false, linkTo = '/shop' }: Props) {
   const { addItem } = useCart();
-
-  const stars = Array.from({ length: 5 }, (_, i) => {
-    if (product.fullRating) return 'fas fa-star';
-    return i < 4 ? 'fas fa-star' : 'fas fa-star-half-alt';
-  });
+  const stars = buildStarClasses(product.fullRating);
 
   return (
     <div className={`box${showAddToCart ? ' box-content' : ''}`}>
@@ -42,7 +39,7 @@ export default function ProductCard({ product, showAddToCart = false, linkTo = '
           </div>
         )}
         <div className="price">
-          <h6 id="prices">${product.price}</h6>
+          <h6 id="prices">{formatPrice(product.price)}</h6>
           <span>
             <i
               className="fas fa-shopping-cart"

@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '@/hooks/useCart';
+import { NAV_LINKS } from '@/constants';
 
 export default function Header() {
   const pathname = usePathname();
@@ -26,11 +27,19 @@ export default function Header() {
       </div>
       <div className="navigations">
         <div className={`navbar${navOpen ? ' show' : ''}`} id="navbar">
-          <Link className={pathname === '/' ? 'active' : ''} href="/">home</Link>
-          <Link className={pathname.startsWith('/shop') ? 'active' : ''} href="/shop">shop</Link>
-          <Link className={pathname === '/blog' ? 'active' : ''} href="/blog">blog</Link>
-          <Link className={pathname === '/about' ? 'active' : ''} href="/about">about</Link>
-          <Link className={pathname === '/contact' ? 'active' : ''} href="/contact">contact</Link>
+          {NAV_LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={
+                href === '/'
+                  ? pathname === '/' ? 'active' : ''
+                  : pathname.startsWith(href) ? 'active' : ''
+              }
+            >
+              {label}
+            </Link>
+          ))}
         </div>
         <div className="icons">
           <i

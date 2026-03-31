@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import Newsletter from '@/components/Newsletter';
-import FeaturesSection from '@/components/FeaturesSection';
+import Newsletter from '@/components/sections/Newsletter';
+import FeaturesSection from '@/components/sections/FeaturesSection';
 
 export const metadata = {
   title: 'Cara Store - About',

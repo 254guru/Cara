@@ -1,9 +1,9 @@
-import { shopProducts } from '@/data/products';
+import { getAllProductIds, getProductById } from '@/services/productService';
 import ProductDetailClient from './ProductDetailClient';
 import { notFound } from 'next/navigation';
 
 export function generateStaticParams() {
-  return shopProducts.map((p) => ({ id: String(p.id) }));
+  return getAllProductIds().map((id) => ({ id: String(id) }));
 }
 
 export const metadata = {
@@ -16,7 +16,7 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = shopProducts.find((p) => p.id === parseInt(id));
+  const product = getProductById(parseInt(id, 10));
   if (!product) notFound();
   return <ProductDetailClient product={product} />;
 }

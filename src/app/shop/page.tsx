@@ -1,6 +1,6 @@
-import Newsletter from '@/components/Newsletter';
-import ProductCard from '@/components/ProductCard';
-import { shopProducts } from '@/data/products';
+import Newsletter from '@/components/sections/Newsletter';
+import ProductCard from '@/components/ui/ProductCard';
+import { getShopProducts } from '@/services/productService';
 
 export const metadata = {
   title: 'Cara Store - Shop',
@@ -8,6 +8,8 @@ export const metadata = {
 };
 
 export default function ShopPage() {
+  const shopProducts = getShopProducts();
+
   return (
     <>
       <section className="shop-banner">

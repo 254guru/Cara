@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Newsletter from '@/components/Newsletter';
-import FeaturesSection from '@/components/FeaturesSection';
-import ProductCard from '@/components/ProductCard';
-import { featuredProducts, newArrivals } from '@/data/products';
+import Newsletter from '@/components/sections/Newsletter';
+import FeaturesSection from '@/components/sections/FeaturesSection';
+import ProductCard from '@/components/ui/ProductCard';
+import { getFeaturedProducts, getNewArrivals } from '@/services/productService';
 
 export const metadata = {
   title: 'Cara Store',
@@ -10,6 +10,9 @@ export const metadata = {
 };
 
 export default function HomePage() {
+  const featuredProducts = getFeaturedProducts();
+  const newArrivals = getNewArrivals();
+
   return (
     <>
       <section className="home" id="home">

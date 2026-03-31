@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import Newsletter from '@/components/Newsletter';
+import Newsletter from '@/components/sections/Newsletter';
 
 const managers = [
   { img: '/people-img/1.png', name: 'jason stathams', role: 'senior marketing manager' },

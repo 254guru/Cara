@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Newsletter from '@/components/Newsletter';
-import { blogPosts } from '@/data/blogPosts';
+import Newsletter from '@/components/sections/Newsletter';
+import { getBlogPosts } from '@/services/blogService';
 
 export const metadata = {
   title: 'Cara Store - Blog',
@@ -9,6 +9,8 @@ export const metadata = {
 };
 
 export default function BlogPage() {
+  const blogPosts = getBlogPosts();
+
   return (
     <>
       <section className="blog-banner">

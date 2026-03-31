@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { CartProvider } from '@/context/CartContext';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Cart from '@/components/Cart';
-import Loader from '@/components/Loader';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import Cart from '@/components/layout/Cart';
+import Loader from '@/components/ui/Loader';
 import './globals.css';
 
 export const metadata: Metadata = {
