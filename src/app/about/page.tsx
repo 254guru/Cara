@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'About Cara Studio',
     description: 'Learn the vision, craft, and culture behind Cara Studio.',
-    images: ['/about-img/a6.jpg'],
+    images: ['/about-img/a6.webp'],
   },
 };
 
@@ -30,7 +30,7 @@ export default function AboutPage() {
       <section className="about" id="about">
         <div className="box-container">
           <div className="box image">
-            <Image src="/about-img/a6.jpg" alt="About Cara Store" width={500} height={400} />
+            <Image src="/about-img/a6.webp" alt="About Cara Store" width={500} height={400} />
           </div>
           <div className="box text">
             <h1>Who we are</h1>

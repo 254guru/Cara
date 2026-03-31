@@ -6,7 +6,7 @@ export default function Footer() {
     <section className="footer" id="footer">
       <div className="box-container">
         <div className="box">
-          <Image src="/extra-img/logo.png" alt="Cara Store" width={120} height={40} />
+          <Image src="/extra-img/logo.webp" alt="Cara Store" width={120} height={40} />
           <h3>Visit Cara Studio</h3>
           <p><span>Address:</span> Westlands, Nairobi, Kenya</p>
           <p><span>Phone:</span> +254 712 345 678</p>

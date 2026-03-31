@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cara Studio Journal',
     description: 'Styling insights and behind-the-scenes stories from the Cara team.',
-    images: ['/blog-img/b1.jpg'],
+    images: ['/blog-img/b1.webp'],
   },
 };
 

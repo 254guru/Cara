@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Contact Cara Studio',
     description: 'Reach our Nairobi team and we will respond within one business day.',
-    images: ['/about-img/banner.png'],
+    images: ['/about-img/banner.webp'],
   },
 };
 

@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://cara-store.example',
     siteName: 'Cara Studio',
-    images: [{ url: '/banner-img/b1.jpg', width: 1200, height: 630, alt: 'Cara Studio shopping collection' }],
+    images: [{ url: '/banner-img/b1.webp', width: 1200, height: 630, alt: 'Cara Studio shopping collection' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Cara Studio | Mobile-first Style Commerce',
     description: 'Curated apparel from Nairobi with fast mobile checkout via M-Pesa and Airtel Money.',
-    images: ['/banner-img/b1.jpg'],
+    images: ['/banner-img/b1.webp'],
   },
   alternates: {
     canonical: '/',

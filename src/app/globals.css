@@ -95,7 +95,7 @@ section {
   border: 1px solid var(--line);
   background:
     linear-gradient(135deg, rgba(18, 91, 80, 0.96) 0%, rgba(17, 66, 58, 0.96) 100%),
-    url('/banner-img/b1.jpg') center/cover;
+    url('/banner-img/b1.webp') center/cover;
   color: #f8fcfb;
   border-radius: var(--radius-lg);
   padding: 2rem 1.3rem;
@@ -314,7 +314,7 @@ header .nav-shell {
   box-shadow: var(--shadow-1);
   background:
     linear-gradient(160deg, rgba(255, 247, 237, 0.96), rgba(255, 253, 248, 0.95)),
-    url('/banner-img/b2.jpg') right center/cover;
+    url('/banner-img/b2.webp') right center/cover;
   padding: 1.4rem;
 }
 
@@ -544,23 +544,23 @@ header .nav-shell {
 }
 
 .ad-container-1 .ad-1 {
-  background: url('/banner-img/b17.jpg') center/cover;
+  background: url('/banner-img/b17.webp') center/cover;
 }
 
 .ad-container-1 .ad-2 {
-  background: url('/banner-img/b18.jpg') center/cover;
+  background: url('/banner-img/b18.webp') center/cover;
 }
 
 .ad-container-2 .ad-1 {
-  background: url('/banner-img/b14.png') center/cover;
+  background: url('/banner-img/b14.webp') center/cover;
 }
 
 .ad-container-2 .ad-2 {
-  background: url('/banner-img/b19.jpg') center/cover;
+  background: url('/banner-img/b19.webp') center/cover;
 }
 
 .ad-container-2 .ad-3 {
-  background: url('/banner-img/b20.jpg') center/cover;
+  background: url('/banner-img/b20.webp') center/cover;
 }
 
 .newsletter .content {

@@ -10,8 +10,8 @@ import { PRODUCT_SIZES } from '@/constants';
 import { buildStarClasses, formatPrice } from '@/lib/utils';
 
 const thumbnailImages = [
-  '/products-img/p2.jpg', '/products-img/p3.jpg', '/products-img/p4.jpg',
-  '/products-img/p1.jpg', '/products-img/p5.jpg', '/products-img/p6.jpg',
+  '/products-img/p2.webp', '/products-img/p3.webp', '/products-img/p4.webp',
+  '/products-img/p1.webp', '/products-img/p5.webp', '/products-img/p6.webp',
 ];
 
 export default function ProductDetailClient({ product }: { product: Product }) {

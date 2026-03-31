@@ -5,9 +5,9 @@ import { useState } from 'react';
 import Newsletter from '@/components/sections/Newsletter';
 
 const managers = [
-  { img: '/people-img/1.png', name: 'Jordan Ellis', role: 'Client success lead' },
-  { img: '/people-img/2.png', name: 'Amara King', role: 'Partnership manager' },
-  { img: '/people-img/3.png', name: 'Noah Cruz', role: 'Store experience specialist' },
+  { img: '/people-img/1.webp', name: 'Jordan Ellis', role: 'Client success lead' },
+  { img: '/people-img/2.webp', name: 'Amara King', role: 'Partnership manager' },
+  { img: '/people-img/3.webp', name: 'Noah Cruz', role: 'Store experience specialist' },
 ];
 
 export default function ContactClient() {

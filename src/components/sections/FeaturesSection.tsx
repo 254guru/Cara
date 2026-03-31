@@ -1,12 +1,12 @@
 import Image from 'next/image';
 
 const features = [
-  { img: '/features-img/f1.png', label: '1-click ordering', cls: 'img-1' },
-  { img: '/features-img/f2.png', label: 'same-day dispatch', cls: 'img-2' },
-  { img: '/features-img/f3.png', label: 'member pricing', cls: 'img-3' },
-  { img: '/features-img/f4.png', label: 'weekly drops', cls: 'img-4' },
-  { img: '/features-img/f5.png', label: 'reward points', cls: 'img-5' },
-  { img: '/features-img/f6.png', label: '24/7 concierge', cls: 'img-6' },
+  { img: '/features-img/f1.webp', label: '1-click ordering', cls: 'img-1' },
+  { img: '/features-img/f2.webp', label: 'same-day dispatch', cls: 'img-2' },
+  { img: '/features-img/f3.webp', label: 'member pricing', cls: 'img-3' },
+  { img: '/features-img/f4.webp', label: 'weekly drops', cls: 'img-4' },
+  { img: '/features-img/f5.webp', label: 'reward points', cls: 'img-5' },
+  { img: '/features-img/f6.webp', label: '24/7 concierge', cls: 'img-6' },
 ];
 
 export default function FeaturesSection() {
