@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+type TxClient = Omit<typeof prisma, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>;
+
 /** POST /api/orders — create an order from the user's cart */
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -35,7 +37,7 @@ export async function POST(req: NextRequest) {
   );
 
   // Create the order with items in a transaction
-  const order = await prisma.$transaction(async (tx) => {
+  const order = await prisma.$transaction(async (tx: TxClient) => {
     const newOrder = await tx.order.create({
       data: {
         userId: session.user.id,
