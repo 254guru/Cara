@@ -6,39 +6,6 @@ A mobile-first fashion e-commerce storefront built with **Next.js 15**, **React 
 
 ---
 
-## Table of Contents
-
-- [Cara Studio](#cara-studio)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Tech Stack](#tech-stack)
-  - [Project Structure](#project-structure)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-    - [Development](#development)
-    - [Production Build](#production-build)
-  - [Scripts](#scripts)
-  - [Image Optimization](#image-optimization)
-    - [How it works](#how-it-works)
-    - [Next.js image config](#nextjs-image-config)
-  - [Pages \& Routes](#pages--routes)
-  - [Architecture](#architecture)
-    - [State Management](#state-management)
-    - [Service Layer](#service-layer)
-    - [Component Organization](#component-organization)
-    - [Server vs Client Components](#server-vs-client-components)
-  - [Design System](#design-system)
-    - [Color Tokens](#color-tokens)
-    - [Typography](#typography)
-    - [Layout](#layout)
-  - [SEO](#seo)
-    - [Localization](#localization)
-  - [Contributing](#contributing)
-  - [License](#license)
-
----
-
 ## Features
 
 - **Mobile-first UI** — Every page and component starts at small viewports and progressively enhances
