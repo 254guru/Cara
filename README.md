@@ -94,7 +94,7 @@ cara-store/
 ### Prerequisites
 
 - **Node.js** 18.17 or later
-- **npm** 9+ (or pnpm / yarn)
+- **pnpm** 10+
 
 ### Installation
 
@@ -104,13 +104,13 @@ git clone https://github.com/<your-username>/Cara.git
 cd Cara
 
 # Install dependencies
-npm install
+pnpm install
 ```
 
 ### Development
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -118,8 +118,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Production Build
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 The build script automatically converts images to WebP before compiling Next.js.
@@ -131,7 +131,7 @@ The build script automatically converts images to WebP before compiling Next.js.
 | Script               | Command                             | Description                                         |
 | -------------------- | ----------------------------------- | --------------------------------------------------- |
 | `dev`                | `next dev`                          | Start the development server                        |
-| `build`              | `images:optimize && next build`     | Optimize images, then create a production build     |
+| `build`              | `node scripts/optimize-images.cjs && next build` | Optimize images, then create a production build     |
 | `start`              | `next start`                        | Start the production server                         |
 | `lint`               | `next lint`                         | Run ESLint checks                                   |
 | `images:optimize`    | `node scripts/optimize-images.cjs`  | Convert all PNG/JPG images to WebP                  |
@@ -145,7 +145,7 @@ All product, banner, blog, and asset images are served in **WebP** format for sm
 ### How it works
 
 1. Place original PNG/JPG/JPEG files in any subdirectory under `public/`
-2. Run `npm run images:optimize` (also runs automatically before every build)
+2. Run `pnpm images:optimize` (also runs automatically before every build)
 3. The script processes each subdirectory with `@254guru/webp-convert` at **quality 82**
 4. WebP files are created alongside the originals, matching filenames
 5. Source code references `.webp` extensions directly
@@ -273,7 +273,7 @@ Every page exports a `metadata` object (or uses `generateMetadata` for dynamic r
 4. Push to the branch: `git push origin feature/my-feature`
 5. Open a Pull Request
 
-Please ensure `npm run lint` passes before submitting.
+Please ensure `pnpm lint` passes before submitting.
 
 ---
 
