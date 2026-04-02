@@ -1,4 +1,4 @@
-# Cara Studio
+# Cara Stores
 
 A mobile-first fashion e-commerce storefront built with **Next.js 15**, **React 18**, and **TypeScript**. Designed and localized for the Kenyan market — featuring KES pricing, M-Pesa & Airtel Money checkout, and Nairobi-based delivery.
 
@@ -17,6 +17,7 @@ A mobile-first fashion e-commerce storefront built with **Next.js 15**, **React 
 - **Contact form** — With embedded Google Maps (Nairobi) and team directory
 - **Static generation** — All pages are pre-rendered at build time for fast loads
 - **WebP image pipeline** — Automated PNG/JPG → WebP conversion via `@254guru/webp-convert`
+- **Internet catalog ingestion** — Pulls fashion products from online sources and syncs them into PostgreSQL
 - **Full SEO** — Open Graph, Twitter Cards, canonical URLs, structured metadata on every page
 
 ---
@@ -135,6 +136,10 @@ The build script automatically converts images to WebP before compiling Next.js.
 | `start`              | `next start`                        | Start the production server                         |
 | `lint`               | `next lint`                         | Run ESLint checks                                   |
 | `images:optimize`    | `node scripts/optimize-images.cjs`  | Convert all PNG/JPG images to WebP                  |
+| `db:push`            | `pnpm exec prisma db push`          | Push Prisma schema changes to database              |
+| `db:seed`            | `pnpm exec tsx prisma/seed.ts`      | Seed demo user and scrape catalog from web sources  |
+| `catalog:scrape`     | `pnpm exec tsx scripts/scrape-catalog.ts` | Scrape and upsert internet fashion catalog     |
+| `catalog:refresh`    | `pnpm db:push && pnpm catalog:scrape` | Refresh DB schema and catalog in one command      |
 
 ---
 
@@ -248,7 +253,7 @@ Defined in `globals.css` using CSS custom properties:
 
 Every page exports a `metadata` object (or uses `generateMetadata` for dynamic routes) providing:
 
-- **Title** with template: `%s | Cara Studio`
+- **Title** with template: `%s | Cara Stores`
 - **Description** tailored to page content and Kenyan market
 - **Open Graph** tags (title, description, image, type, siteName)
 - **Twitter Card** tags (summary_large_image)

@@ -6,10 +6,10 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Meet Cara Studio: a mobile-first fashion brand blending editorial storytelling with practical everyday wear.',
+  description: 'Meet Cara Stores: a mobile-first fashion brand blending editorial storytelling with practical everyday wear.',
   openGraph: {
-    title: 'About Cara Studio',
-    description: 'Learn the vision, craft, and culture behind Cara Studio.',
+    title: 'About Cara Stores',
+    description: 'Learn the vision, craft, and culture behind Cara Stores.',
     images: ['/about-img/a6.webp'],
   },
 };
@@ -30,7 +30,7 @@ export default function AboutPage() {
       <section className="about" id="about">
         <div className="box-container">
           <div className="box image">
-            <Image src="/about-img/a6.webp" alt="About Cara Store" width={500} height={400} />
+            <Image src="/about-img/a6.webp" alt="About Cara Stores" width={500} height={400} />
           </div>
           <div className="box text">
             <h1>Who we are</h1>

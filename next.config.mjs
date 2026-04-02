@@ -6,7 +6,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.dummyjson.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fakestoreapi.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.dummyjson.com',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
   },
   webpack: (config) => {

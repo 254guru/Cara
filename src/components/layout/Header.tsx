@@ -30,7 +30,7 @@ export default function Header() {
       <div className="nav-shell">
         <div className="logo">
           <Link href="/" className="logo" aria-label="Cara home">
-            <Image src="/extra-img/logo.webp" alt="Cara Store" width={120} height={40} priority />
+            <Image src="/extra-img/logo.webp" alt="Cara Stores" width={120} height={40} priority />
           </Link>
         </div>
         <div className="navigations">

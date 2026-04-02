@@ -14,7 +14,9 @@ const thumbnailImages = [
   '/products-img/p1.webp', '/products-img/p5.webp', '/products-img/p6.webp',
 ];
 
-export default function ProductDetailClient({ product }: { product: Product }) {
+export default function ProductDetailClient(
+  { product, recommendations = [] }: { product: Product; recommendations?: Product[] },
+) {
   const [mainImg, setMainImg] = useState(product.image);
   const { addItem } = useCart();
   const stars = buildStarClasses(product.fullRating);
@@ -73,6 +75,38 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </div>
         </div>
       </section>
+
+      {recommendations.length > 0 && (
+        <section className="complete-look" aria-label="Complete the look">
+          <div className="section-heading">
+            <h2>Complete The Look</h2>
+            <p>AI-picked matches based on style, silhouette, and product context.</p>
+          </div>
+          <div className="box-container">
+            {recommendations.map((item) => (
+              <div key={item.id} className="box">
+                <div className="image">
+                  <Image src={item.image} alt={item.title} width={240} height={240} />
+                </div>
+                <div className="content">
+                  <h3>{item.brand}</h3>
+                  <p className="product-title">{item.title}</p>
+                  <div className="price">
+                    <h6 id="prices">{formatPrice(item.price)}</h6>
+                    <button className="icon-btn-small" onClick={() => addItem(item)} type="button" aria-label={`Add ${item.title} to cart`}>
+                      <i className="fas fa-shopping-bag" />
+                    </button>
+                  </div>
+                  <Link href={`/shop/${item.id}`} className="btn" style={{ marginTop: '0.5rem' }}>
+                    View Item
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <Newsletter />
     </>
   );

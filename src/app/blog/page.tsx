@@ -6,9 +6,9 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Journal',
-  description: 'Read Cara Studio journal stories on styling, trends, fit tips, and seasonal collections.',
+  description: 'Read Cara Stores journal stories on styling, trends, fit tips, and seasonal collections.',
   openGraph: {
-    title: 'Cara Studio Journal',
+    title: 'Cara Stores Journal',
     description: 'Styling insights and behind-the-scenes stories from the Cara team.',
     images: ['/blog-img/b1.webp'],
   },

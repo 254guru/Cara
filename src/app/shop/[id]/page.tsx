@@ -1,10 +1,12 @@
 import { getAllProductIds, getProductByIdFromDB } from '@/services/productService';
+import { completeTheLook } from '@/lib/semantic';
 import ProductDetailClient from './ProductDetailClient';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-export function generateStaticParams() {
-  return getAllProductIds().map((id) => ({ id: String(id) }));
+export async function generateStaticParams() {
+  const ids = await getAllProductIds();
+  return ids.map((id) => ({ id: String(id) }));
 }
 
 export async function generateMetadata(
@@ -22,9 +24,9 @@ export async function generateMetadata(
 
   return {
     title: `${product.title} by ${product.brand}`,
-    description: `Explore ${product.title} from ${product.brand} with pricing, sizing, and quick mobile checkout at Cara Studio.`,
+    description: `Explore ${product.title} from ${product.brand} with pricing, sizing, and quick mobile checkout at Cara Stores.`,
     openGraph: {
-      title: `${product.title} | Cara Studio`,
+      title: `${product.title} | Cara Stores`,
       description: `Shop ${product.title} by ${product.brand}.`,
       images: [product.image],
     },
@@ -37,7 +39,10 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await getProductByIdFromDB(parseInt(id, 10));
+  const numericId = parseInt(id, 10);
+  const product = await getProductByIdFromDB(numericId);
   if (!product) notFound();
-  return <ProductDetailClient product={product} />;
+  const recommendations = await completeTheLook(numericId, 4);
+
+  return <ProductDetailClient product={product} recommendations={recommendations} />;
 }

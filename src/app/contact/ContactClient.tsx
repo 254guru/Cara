@@ -42,7 +42,7 @@ export default function ContactClient() {
             <h1>Visit our Nairobi studio or reach out digitally</h1>
             <h4>Head office</h4>
             <div className="location"><i className="fas fa-map" /><span>Westlands, Nairobi, Kenya</span></div>
-            <div className="location"><i className="fas fa-envelope" /><span>support@carastudio.co.ke</span></div>
+            <div className="location"><i className="fas fa-envelope" /><span>support@carastores.co.ke</span></div>
             <div className="location"><i className="fas fa-phone" /><span>+254 712 345 678</span></div>
             <div className="location"><i className="fas fa-clock" /><span>Monday to Sunday, 9:00 AM - 8:00 PM</span></div>
           </div>
@@ -81,7 +81,7 @@ export default function ContactClient() {
                   <h3>{person.name}</h3>
                   <p>{person.role}</p>
                   <p>Phone: +254 712 345 678</p>
-                  <p>Email: hello@carastudio.co.ke</p>
+                  <p>Email: hello@carastores.co.ke</p>
                 </div>
               </div>
             ))}

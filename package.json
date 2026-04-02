@@ -12,9 +12,12 @@
     "lint": "next lint",
     "db:migrate": "pnpm exec prisma migrate dev",
     "db:push": "pnpm exec prisma db push",
+    "db:setup:postgres": "bash scripts/setup-local-db.sh",
     "db:seed": "pnpm exec tsx prisma/seed.ts",
     "db:studio": "pnpm exec prisma studio",
-    "db:reset": "pnpm exec prisma migrate reset"
+    "db:reset": "pnpm exec prisma migrate reset",
+    "catalog:scrape": "pnpm exec tsx scripts/scrape-catalog.ts",
+    "catalog:refresh": "pnpm db:push && pnpm catalog:scrape"
   },
   "prisma": {
     "seed": "pnpm exec tsx prisma/seed.ts"
@@ -36,6 +39,7 @@
     "@254guru/webp-convert": "^2.4.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

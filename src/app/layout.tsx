@@ -4,29 +4,30 @@ import { CartProvider } from '@/context/CartContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Cart from '@/components/layout/Cart';
+import AIAssistantWidget from '@/components/ai/AIAssistantWidget';
 import Loader from '@/components/ui/Loader';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://cara-store.example'),
+  metadataBase: new URL('https://cara-stores.example'),
   title: {
-    default: 'Cara Studio | Mobile-first Style Commerce',
-    template: '%s | Cara Studio',
+    default: 'Cara Stores | Mobile-first Style Commerce',
+    template: '%s | Cara Stores',
   },
-  description: 'Cara Studio Kenya is a Nairobi-based, mobile-first fashion storefront with curated drops and mobile money checkout.',
+  description: 'Cara Stores Kenya is a Nairobi-based, mobile-first fashion storefront with curated drops and mobile money checkout.',
   keywords: ['fashion', 'mobile commerce', 'Nairobi', 'Kenya', 'M-Pesa', 'Airtel Money', 'streetwear', 'online boutique'],
-  authors: [{ name: 'Cara Studio Team' }],
+  authors: [{ name: 'Cara Stores Team' }],
   openGraph: {
-    title: 'Cara Studio | Mobile-first Style Commerce',
+    title: 'Cara Stores | Mobile-first Style Commerce',
     description: 'Curated apparel from Nairobi with fast mobile checkout via M-Pesa and Airtel Money.',
     type: 'website',
-    url: 'https://cara-store.example',
-    siteName: 'Cara Studio',
-    images: [{ url: '/banner-img/b1.webp', width: 1200, height: 630, alt: 'Cara Studio shopping collection' }],
+    url: 'https://cara-stores.example',
+    siteName: 'Cara Stores',
+    images: [{ url: '/banner-img/b1.webp', width: 1200, height: 630, alt: 'Cara Stores shopping collection' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cara Studio | Mobile-first Style Commerce',
+    title: 'Cara Stores | Mobile-first Style Commerce',
     description: 'Curated apparel from Nairobi with fast mobile checkout via M-Pesa and Airtel Money.',
     images: ['/banner-img/b1.webp'],
   },
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             <main>{children}</main>
             <Cart />
+            <AIAssistantWidget />
             <Footer />
             <Loader />
           </CartProvider>

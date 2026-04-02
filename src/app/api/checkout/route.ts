@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       phone: cleanPhone,
       amount: order.total,
       orderId: order.id,
-      description: `Cara Studio order ${order.id}`,
+      description: `Cara Stores order ${order.id}`,
     });
 
     // Store the phone used for payment

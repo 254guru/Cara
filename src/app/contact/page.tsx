@@ -3,9 +3,9 @@ import ContactClient from './ContactClient';
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Connect with Cara Studio Nairobi for support, partnerships, wholesale inquiries, and customer care in Kenya.',
+  description: 'Connect with Cara Stores Nairobi for support, partnerships, wholesale inquiries, and customer care in Kenya.',
   openGraph: {
-    title: 'Contact Cara Studio',
+    title: 'Contact Cara Stores',
     description: 'Reach our Nairobi team and we will respond within one business day.',
     images: ['/about-img/banner.webp'],
   },

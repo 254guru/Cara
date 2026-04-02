@@ -20,6 +20,7 @@ model User {
 
   cartItems     CartItem[]
   orders        Order[]
+  chatSessions  ChatSession[]
 
   @@map("users")
 }
@@ -34,6 +35,8 @@ enum Role {
 
 model Product {
   id          Int       @id @default(autoincrement())
+  source      String    @default("manual")
+  externalId  String?
   brand       String
   title       String
   description String    @default("")
@@ -48,8 +51,44 @@ model Product {
 
   cartItems   CartItem[]
   orderItems  OrderItem[]
+  embedding   ProductEmbedding?
+
+  @@unique([source, externalId])
 
   @@map("products")
+}
+
+// ─── Catalog source health ──────────────────────────────
+
+model CatalogSource {
+  id               String    @id @default(cuid())
+  name             String    @unique
+  displayName      String
+  url              String
+  healthScore      Float     @default(1.0)
+  consecutiveFails Int       @default(0)
+  totalRuns        Int       @default(0)
+  totalOkRuns      Int       @default(0)
+  lastRunAt        DateTime?
+  lastRunOk        Boolean   @default(true)
+  lastItemCount    Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("catalog_sources")
+}
+
+model ProductEmbedding {
+  id         String   @id @default(cuid())
+  productId  Int      @unique @map("product_id")
+  sourceText String   @map("source_text")
+  embedding  Unsupported("vector(1536)")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_embeddings")
 }
 
 // ─── Cart (server-persisted) ────────────────────────────
@@ -110,4 +149,36 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("order_items")
+}
+
+model ChatSession {
+  id        String       @id @default(cuid())
+  userId    String       @map("user_id")
+  title     String       @default("Shopping Assistant")
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+
+  @@index([userId, updatedAt])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        String    @id @default(cuid())
+  sessionId String    @map("session_id")
+  role      ChatRole
+  content   String
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@map("chat_messages")
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
 }

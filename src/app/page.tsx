@@ -9,15 +9,15 @@ export const metadata: Metadata = {
   title: 'Homepage',
   description: 'Shop curated everyday pieces with mobile-first browsing, instant cart actions, and weekly style drops.',
   openGraph: {
-    title: 'Cara Studio Homepage',
-    description: 'Discover top picks, fresh arrivals, and seasonal collections from Cara Studio.',
+    title: 'Cara Stores Homepage',
+    description: 'Discover top picks, fresh arrivals, and seasonal collections from Cara Stores.',
     images: ['/banner-img/b2.webp'],
   },
 };
 
-export default function HomePage() {
-  const featuredProducts = getFeaturedProducts();
-  const newArrivals = getNewArrivals();
+export default async function HomePage() {
+  const featuredProducts = await getFeaturedProducts();
+  const newArrivals = await getNewArrivals();
 
   return (
     <>

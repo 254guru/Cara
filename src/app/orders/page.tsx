@@ -78,7 +78,7 @@ export default function OrdersPage() {
           <div className="content">
             <span className="pill">Orders</span>
             <h1>Your orders</h1>
-            <p>Track and manage all your Cara Studio purchases.</p>
+            <p>Track and manage all your Cara Stores purchases.</p>
           </div>
         </div>
       </section>
