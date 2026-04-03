@@ -7,20 +7,31 @@ function loadDatabaseUrlFromEnvFile(): string | undefined {
   if (!fs.existsSync(envPath)) return undefined;
 
   const content = fs.readFileSync(envPath, 'utf8');
-  const line = content
-    .split(/\r?\n/)
-    .find((l) => l.trim().startsWith('DATABASE_URL='));
+  const lines = content.split(/\r?\n/);
+  const candidates = ['DATABASE_URL', 'POSTGRES_PRISMA_URL', 'POSTGRES_URL'];
 
-  if (!line) return undefined;
+  for (const key of candidates) {
+    const line = lines.find((l) => l.trim().startsWith(`${key}=`));
+    if (!line) continue;
 
-  const raw = line.slice('DATABASE_URL='.length).trim();
-  return raw.replace(/^"|"$/g, '').replace(/^'|'$/g, '');
+    const raw = line.slice(`${key}=`.length).trim();
+    return raw.replace(/^"|"$/g, '').replace(/^'|'$/g, '');
+  }
+
+  return undefined;
 }
 
-const databaseUrl = process.env.DATABASE_URL || loadDatabaseUrlFromEnvFile();
+const databaseUrl =
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_PRISMA_URL ||
+  process.env.POSTGRES_URL ||
+  loadDatabaseUrlFromEnvFile();
 
 export default defineConfig({
   schema: path.join(__dirname, 'prisma', 'schema.prisma'),
+  migrations: {
+    seed: 'pnpm exec tsx prisma/seed.ts',
+  },
   datasource: {
     url: databaseUrl,
   },
