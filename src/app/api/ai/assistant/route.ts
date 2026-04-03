@@ -6,6 +6,8 @@ import { scrapeFashionCatalog } from '@/lib/catalog';
 import { chatCompletion } from '@/lib/ai';
 import { semanticSearchProducts } from '@/lib/semantic';
 
+export const runtime = 'nodejs';
+
 type SearchProduct = {
   id: number;
   brand: string;
@@ -91,115 +93,136 @@ function fallbackReply(message: string, picks: SearchProduct[]): string {
 }
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ sessionId: null, messages: [] });
-  }
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ sessionId: null, messages: [] });
+    }
 
-  const { searchParams } = new URL(req.url);
-  const requestedSessionId = searchParams.get('sessionId');
+    const { searchParams } = new URL(req.url);
+    const requestedSessionId = searchParams.get('sessionId');
 
-  const chatSession = requestedSessionId
-    ? await prisma.chatSession.findFirst({
-      where: { id: requestedSessionId, userId: session.user.id },
-      include: { messages: { orderBy: { createdAt: 'asc' }, take: 20 } },
-    })
-    : await prisma.chatSession.findFirst({
-      where: { userId: session.user.id },
-      orderBy: { updatedAt: 'desc' },
-      include: { messages: { orderBy: { createdAt: 'asc' }, take: 20 } },
-    });
-
-  if (!chatSession) {
-    return NextResponse.json({ sessionId: null, messages: [] });
-  }
-
-  const messages = chatSession.messages.map((m) => ({
-    role: m.role === 'USER' ? 'user' : 'assistant',
-    content: m.content,
-  }));
-
-  return NextResponse.json({ sessionId: chatSession.id, messages });
-}
-
-export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const body = (await req.json()) as { message?: string; sessionId?: string };
-  const message = (body.message || '').trim();
-
-  if (!message) {
-    return NextResponse.json({ error: 'Message is required' }, { status: 400 });
-  }
-
-  const semantic = await semanticSearchProducts(message, 8);
-  const products = semantic.length > 0 ? semantic : await loadProducts();
-  const ranked = rankProducts(message, products);
-  const suggestedProducts = ranked.slice(0, 4);
-
-  let activeSessionId: string | null = null;
-  let history: Array<{ role: string; content: string }> = [];
-
-  if (session?.user?.id) {
-    const found = body.sessionId
+    const chatSession = requestedSessionId
       ? await prisma.chatSession.findFirst({
-        where: { id: body.sessionId, userId: session.user.id },
+        where: { id: requestedSessionId, userId: session.user.id },
+        include: { messages: { orderBy: { createdAt: 'asc' }, take: 20 } },
       })
       : await prisma.chatSession.findFirst({
         where: { userId: session.user.id },
         orderBy: { updatedAt: 'desc' },
+        include: { messages: { orderBy: { createdAt: 'asc' }, take: 20 } },
       });
 
-    const chatSession = found || await prisma.chatSession.create({
-      data: {
-        userId: session.user.id,
-        title: message.slice(0, 60),
-      },
-    });
+    if (!chatSession) {
+      return NextResponse.json({ sessionId: null, messages: [] });
+    }
 
-    activeSessionId = chatSession.id;
-
-    const priorMessages = await prisma.chatMessage.findMany({
-      where: { sessionId: chatSession.id },
-      orderBy: { createdAt: 'asc' },
-      take: 12,
-    });
-
-    history = priorMessages.map((m) => ({
+    const messages = chatSession.messages.map((m) => ({
       role: m.role === 'USER' ? 'user' : 'assistant',
       content: m.content,
     }));
 
-    await prisma.chatMessage.create({
-      data: {
-        sessionId: chatSession.id,
-        role: 'USER',
-        content: message,
-      },
-    });
+    return NextResponse.json({ sessionId: chatSession.id, messages });
+  } catch (error) {
+    console.error('AI assistant GET failed', error);
+    return NextResponse.json({ sessionId: null, messages: [] });
   }
+}
 
-  const aiReply = await chatCompletion(
-    message,
-    serializeCatalog(suggestedProducts),
-    serializeHistory(history),
-  );
+export async function POST(req: NextRequest) {
+  let message = '';
 
-  const reply = aiReply || fallbackReply(message, suggestedProducts);
+  try {
+    const session = await getServerSession(authOptions);
+    const body = (await req.json()) as { message?: string; sessionId?: string };
+    message = (body.message || '').trim();
 
-  if (activeSessionId) {
-    await prisma.chatMessage.create({
-      data: {
-        sessionId: activeSessionId,
-        role: 'ASSISTANT',
-        content: reply,
+    if (!message) {
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
+    }
+
+    const semantic = await semanticSearchProducts(message, 8);
+    const products = semantic.length > 0 ? semantic : await loadProducts();
+    const ranked = rankProducts(message, products);
+    const suggestedProducts = ranked.slice(0, 4);
+
+    let activeSessionId: string | null = null;
+    let history: Array<{ role: string; content: string }> = [];
+
+    if (session?.user?.id) {
+      const found = body.sessionId
+        ? await prisma.chatSession.findFirst({
+          where: { id: body.sessionId, userId: session.user.id },
+        })
+        : await prisma.chatSession.findFirst({
+          where: { userId: session.user.id },
+          orderBy: { updatedAt: 'desc' },
+        });
+
+      const chatSession = found || await prisma.chatSession.create({
+        data: {
+          userId: session.user.id,
+          title: message.slice(0, 60),
+        },
+      });
+
+      activeSessionId = chatSession.id;
+
+      const priorMessages = await prisma.chatMessage.findMany({
+        where: { sessionId: chatSession.id },
+        orderBy: { createdAt: 'asc' },
+        take: 12,
+      });
+
+      history = priorMessages.map((m) => ({
+        role: m.role === 'USER' ? 'user' : 'assistant',
+        content: m.content,
+      }));
+
+      await prisma.chatMessage.create({
+        data: {
+          sessionId: chatSession.id,
+          role: 'USER',
+          content: message,
+        },
+      });
+    }
+
+    const aiReply = await chatCompletion(
+      message,
+      serializeCatalog(suggestedProducts),
+      serializeHistory(history),
+    );
+
+    const reply = aiReply || fallbackReply(message, suggestedProducts);
+
+    if (activeSessionId) {
+      await prisma.chatMessage.create({
+        data: {
+          sessionId: activeSessionId,
+          role: 'ASSISTANT',
+          content: reply,
+        },
+      });
+
+      await prisma.chatSession.update({
+        where: { id: activeSessionId },
+        data: { updatedAt: new Date() },
+      });
+    }
+
+    return NextResponse.json({ reply, suggestedProducts, sessionId: activeSessionId });
+  } catch (error) {
+    console.error('AI assistant POST failed', error);
+    return NextResponse.json(
+      {
+        reply:
+          'I had trouble reaching one of my services. Please try again in a moment.',
+        suggestedProducts: [],
+        sessionId: null,
+        degraded: true,
       },
-    });
-
-    await prisma.chatSession.update({
-      where: { id: activeSessionId },
-      data: { updatedAt: new Date() },
-    });
+      { status: 200 },
+    );
   }
-
-  return NextResponse.json({ reply, suggestedProducts, sessionId: activeSessionId });
 }
