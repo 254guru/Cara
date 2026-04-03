@@ -1,16 +1,33 @@
 import { Product } from '@/types';
 import { prisma } from '@/lib/prisma';
 import { scrapeFashionCatalog } from '@/lib/catalog';
+import { unstable_cache } from 'next/cache';
 
 /* ──────────────────────────────────────────────────────────
- * These helpers try the database first and fall back to the
- * static data arrays so the app keeps working without a DB.
+ * These helpers read from the database first and can fall back
+ * to live catalog scraping if DB reads fail.
  * ────────────────────────────────────────────────────────── */
 
-async function listProducts(limit = 120): Promise<Product[]> {
+const PRODUCT_SELECT = {
+  id: true,
+  source: true,
+  externalId: true,
+  brand: true,
+  title: true,
+  description: true,
+  price: true,
+  image: true,
+  rating: true,
+  fullRating: true,
+  category: true,
+  inStock: true,
+} as const;
+
+async function listProductsUncached(limit = 120): Promise<Product[]> {
   try {
     const products = await prisma.product.findMany({
       where: { inStock: true },
+      select: PRODUCT_SELECT,
       orderBy: { createdAt: 'desc' },
       take: limit,
     });
@@ -23,25 +40,73 @@ async function listProducts(limit = 120): Promise<Product[]> {
     const scraped = await scrapeFashionCatalog(limit);
     return scraped.map((item, idx) => ({
       id: idx + 1,
+      source: item.source,
+      externalId: item.externalId,
       brand: item.brand,
       title: item.title,
+      description: item.description,
       price: item.price,
       image: item.image,
       rating: item.rating,
       fullRating: item.fullRating,
+      category: item.category,
+      inStock: true,
     }));
   } catch {
     return [];
   }
 }
 
-export async function getShopProductsFromDB(): Promise<Product[]> {
-  return listProducts(120);
-}
+const getShopProductsCached = unstable_cache(
+  async () => listProductsUncached(120),
+  ['products:shop:v1'],
+  { revalidate: 20 },
+);
 
-export async function getProductByIdFromDB(id: number): Promise<Product | undefined> {
+const getFeaturedProductsCached = unstable_cache(
+  async () => {
+    try {
+      const products = await prisma.product.findMany({
+        where: { inStock: true },
+        select: PRODUCT_SELECT,
+        orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
+        take: 8,
+      });
+
+      return products as Product[];
+    } catch {
+      return [];
+    }
+  },
+  ['products:featured:v1'],
+  { revalidate: 20 },
+);
+
+const getNewArrivalsCached = unstable_cache(
+  async () => {
+    try {
+      const products = await prisma.product.findMany({
+        where: { inStock: true },
+        select: PRODUCT_SELECT,
+        orderBy: { createdAt: 'desc' },
+        take: 8,
+      });
+
+      return products as Product[];
+    } catch {
+      return [];
+    }
+  },
+  ['products:new-arrivals:v1'],
+  { revalidate: 20 },
+);
+
+async function getProductByIdUncached(id: number): Promise<Product | undefined> {
   try {
-    const product = await prisma.product.findUnique({ where: { id } });
+    const product = await prisma.product.findUnique({
+      where: { id },
+      select: PRODUCT_SELECT,
+    });
     if (product) return product as Product;
   } catch {
     return undefined;
@@ -50,40 +115,30 @@ export async function getProductByIdFromDB(id: number): Promise<Product | undefi
   return undefined;
 }
 
+export async function getShopProductsFromDB(): Promise<Product[]> {
+  return getShopProductsCached();
+}
+
+export async function getProductByIdFromDB(id: number): Promise<Product | undefined> {
+  const getByIdCached = unstable_cache(
+    async () => getProductByIdUncached(id),
+    [`products:by-id:${id}:v1`],
+    { revalidate: 20 },
+  );
+
+  return getByIdCached();
+}
+
 export async function getFeaturedProducts(): Promise<Product[]> {
-  try {
-    const products = await prisma.product.findMany({
-      where: { inStock: true },
-      orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
-      take: 8,
-    });
-
-    if (products.length > 0) return products as Product[];
-  } catch {
-    return [];
-  }
-
-  return [];
+  return getFeaturedProductsCached();
 }
 
 export async function getNewArrivals(): Promise<Product[]> {
-  try {
-    const products = await prisma.product.findMany({
-      where: { inStock: true },
-      orderBy: { createdAt: 'desc' },
-      take: 8,
-    });
-
-    if (products.length > 0) return products as Product[];
-  } catch {
-    return [];
-  }
-
-  return [];
+  return getNewArrivalsCached();
 }
 
 export async function getShopProducts(): Promise<Product[]> {
-  return listProducts(120);
+  return getShopProductsCached();
 }
 
 export async function getProductById(id: number): Promise<Product | undefined> {

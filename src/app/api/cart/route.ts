@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { getDefaultProductUnit } from '@/lib/productUnits';
 
 /** GET /api/cart — fetch the current user's cart */
 export async function GET() {
@@ -26,27 +27,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { productId, quantity = 1, size = 'M' } = await req.json();
+  const { productId, quantity = 1, size } = await req.json();
 
   if (!productId) {
     return NextResponse.json({ error: 'productId is required' }, { status: 400 });
   }
+
+  const numericProductId = parseInt(productId, 10);
+  const product = await prisma.product.findUnique({
+    where: { id: numericProductId },
+    select: {
+      title: true,
+      category: true,
+      description: true,
+    },
+  });
+
+  const resolvedSize = size || getDefaultProductUnit(product || {});
 
   // Upsert: if same product+size exists, update quantity
   const item = await prisma.cartItem.upsert({
     where: {
       userId_productId_size: {
         userId: session.user.id,
-        productId: parseInt(productId, 10),
-        size,
+        productId: numericProductId,
+        size: resolvedSize,
       },
     },
     update: { quantity },
     create: {
       userId: session.user.id,
-      productId: parseInt(productId, 10),
+      productId: numericProductId,
       quantity,
-      size,
+      size: resolvedSize,
     },
     include: { product: true },
   });

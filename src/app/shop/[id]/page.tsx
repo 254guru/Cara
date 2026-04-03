@@ -1,13 +1,11 @@
-import { getAllProductIds, getProductByIdFromDB } from '@/services/productService';
+import { getProductByIdFromDB } from '@/services/productService';
 import { completeTheLook } from '@/lib/semantic';
 import ProductDetailClient from './ProductDetailClient';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-export async function generateStaticParams() {
-  const ids = await getAllProductIds();
-  return ids.map((id) => ({ id: String(id) }));
-}
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
@@ -24,10 +22,16 @@ export async function generateMetadata(
 
   return {
     title: `${product.title} by ${product.brand}`,
-    description: `Explore ${product.title} from ${product.brand} with pricing, sizing, and quick mobile checkout at Cara Stores.`,
+    description:
+      product.description && product.description.trim().length > 20
+        ? product.description
+        : `Explore ${product.title} from ${product.brand} with pricing, sizing, and quick mobile checkout at Cara Stores.`,
     openGraph: {
       title: `${product.title} | Cara Stores`,
-      description: `Shop ${product.title} by ${product.brand}.`,
+      description:
+        product.description && product.description.trim().length > 20
+          ? product.description
+          : `Shop ${product.title} by ${product.brand}.`,
       images: [product.image],
     },
   };

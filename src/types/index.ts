@@ -6,6 +6,11 @@ export interface Product {
   image: string;
   rating: number;
   fullRating: boolean;
+  description?: string;
+  category?: string;
+  source?: string;
+  externalId?: string;
+  inStock?: boolean;
 }
 
 export interface CartItem extends Product {

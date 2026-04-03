@@ -3,6 +3,7 @@
 import { createContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
 import { useSession } from 'next-auth/react';
 import { CartItem, Product } from '@/types';
+import { getDefaultProductUnit } from '@/lib/productUnits';
 
 interface CartState {
   items: CartItem[];
@@ -12,7 +13,7 @@ interface CartState {
 
 type CartAction =
   | { type: 'SET_ITEMS'; payload: CartItem[] }
-  | { type: 'ADD_ITEM'; payload: Product }
+  | { type: 'ADD_ITEM'; payload: { product: Product; size: string } }
   | { type: 'REMOVE_ITEM'; payload: number }
   | { type: 'UPDATE_QUANTITY'; payload: { id: number; quantity: number } }
   | { type: 'UPDATE_SIZE'; payload: { id: number; size: string } }
@@ -23,7 +24,7 @@ type CartAction =
 
 export interface CartContextType {
   state: CartState;
-  addItem: (product: Product) => void;
+  addItem: (product: Product, size?: string) => void;
   removeItem: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   updateSize: (id: number, size: string) => void;
@@ -60,9 +61,12 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     case 'SET_ITEMS':
       return { ...state, items: action.payload, syncing: false };
     case 'ADD_ITEM': {
-      const exists = state.items.find((item) => item.id === action.payload.id);
+      const exists = state.items.find((item) => item.id === action.payload.product.id);
       if (exists) return state;
-      return { ...state, items: [...state.items, { ...action.payload, quantity: 1, size: 'M' }] };
+      return {
+        ...state,
+        items: [...state.items, { ...action.payload.product, quantity: 1, size: action.payload.size }],
+      };
     }
     case 'REMOVE_ITEM':
       return { ...state, items: state.items.filter((item) => item.id !== action.payload) };
@@ -155,9 +159,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const addItem = useCallback(
-    (product: Product) => {
-      dispatch({ type: 'ADD_ITEM', payload: product });
-      syncToServer('add', { productId: product.id, quantity: 1, size: 'M' });
+    (product: Product, size?: string) => {
+      const resolvedSize = size || getDefaultProductUnit(product);
+      dispatch({ type: 'ADD_ITEM', payload: { product, size: resolvedSize } });
+      syncToServer('add', { productId: product.id, quantity: 1, size: resolvedSize });
     },
     [syncToServer],
   );
@@ -172,18 +177,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = useCallback(
     (id: number, quantity: number) => {
+      const existing = state.items.find((item) => item.id === id);
       dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
-      syncToServer('update', { productId: id, quantity });
+      syncToServer('update', { productId: id, quantity, size: existing?.size || 'Standard' });
     },
-    [syncToServer],
+    [state.items, syncToServer],
   );
 
   const updateSize = useCallback(
     (id: number, size: string) => {
+      const existing = state.items.find((item) => item.id === id);
       dispatch({ type: 'UPDATE_SIZE', payload: { id, size } });
-      syncToServer('update', { productId: id, size });
+      syncToServer('update', { productId: id, quantity: existing?.quantity || 1, size });
     },
-    [syncToServer],
+    [state.items, syncToServer],
   );
 
   const clearCart = useCallback(() => {

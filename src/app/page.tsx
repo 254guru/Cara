@@ -5,6 +5,9 @@ import ProductCard from '@/components/ui/ProductCard';
 import { getFeaturedProducts, getNewArrivals } from '@/services/productService';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Homepage',
   description: 'Shop curated everyday pieces with mobile-first browsing, instant cart actions, and weekly style drops.',
@@ -52,7 +55,7 @@ export default async function HomePage() {
         </div>
         <div className="box-container">
           {featuredProducts.map((p) => (
-            <ProductCard key={p.id} product={p} linkTo="/shop" />
+            <ProductCard key={p.id} product={p} linkTo={`/shop/${p.id}`} />
           ))}
         </div>
       </section>
@@ -76,7 +79,7 @@ export default async function HomePage() {
         </div>
         <div className="box-container">
           {newArrivals.map((p) => (
-            <ProductCard key={p.id} product={p} linkTo="/shop" />
+            <ProductCard key={p.id} product={p} linkTo={`/shop/${p.id}`} />
           ))}
         </div>
       </section>

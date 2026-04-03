@@ -3,6 +3,9 @@ import ShopAISearch from '@/components/ai/ShopAISearch';
 import { getShopProductsFromDB } from '@/services/productService';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Shop',
   description: 'Browse all Cara Stores products with fast filtering, mobile-first cards, and instant add-to-cart actions.',

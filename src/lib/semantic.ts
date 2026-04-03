@@ -25,6 +25,69 @@ function keywordScore(p: DbProduct, terms: string[]): number {
   return terms.reduce((acc, t) => (haystack.includes(t) ? acc + 2 : acc), 0);
 }
 
+function classifyProductKind(product: Pick<DbProduct, 'title' | 'description' | 'category'>): string {
+  const text = `${product.title} ${product.category || ''} ${product.description || ''}`.toLowerCase();
+
+  if (/(lotion|cream|serum|gel|body wash|shampoo|conditioner|perfume|spray)/.test(text)) return 'beauty';
+  if (/(motorbike|motorcycle|scooter|bike|car|vehicle)/.test(text)) return 'vehicle';
+  if (/(shoe|sneaker|boot|sandal|loafer|heel)/.test(text)) return 'footwear';
+  if (/(shirt|t-shirt|tee|top|blouse)/.test(text)) return 'tops';
+  if (/(hoodie|jacket|coat|outerwear)/.test(text)) return 'outerwear';
+  if (/(jean|pant|trouser|short|skirt|legging)/.test(text)) return 'bottoms';
+  if (/(dress|gown)/.test(text)) return 'dress';
+  if (/(bag|backpack|wallet|purse)/.test(text)) return 'bags';
+  if (/(watch|cap|hat|belt|glasses|sunglasses|jewelry)/.test(text)) return 'accessories';
+
+  return (product.category || '').toLowerCase() || 'generic';
+}
+
+function classifyProductFamily(product: Pick<DbProduct, 'title' | 'description' | 'category'>): string {
+  const kind = classifyProductKind(product);
+  if (['tops', 'outerwear', 'bottoms', 'dress'].includes(kind)) return 'apparel';
+  return kind;
+}
+
+function sharedProductTerms(a: Pick<DbProduct, 'title'>, b: Pick<DbProduct, 'title'>): number {
+  const stopwords = new Set(['with', 'for', 'the', 'and', 'from']);
+  const tokenize = (value: string) => new Set(
+    value
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((token) => token.length > 3 && !stopwords.has(token)),
+  );
+
+  const left = tokenize(a.title);
+  const right = tokenize(b.title);
+
+  let matches = 0;
+  for (const token of left) {
+    if (right.has(token)) matches += 1;
+  }
+
+  return matches;
+}
+
+function isRelatedRecommendation(
+  target: Pick<DbProduct, 'id' | 'title' | 'description' | 'category'>,
+  candidate: Pick<DbProduct, 'id' | 'title' | 'description' | 'category'>,
+): boolean {
+  if (target.id === candidate.id) return false;
+
+  const targetFamily = classifyProductFamily(target);
+  const candidateFamily = classifyProductFamily(candidate);
+  if (targetFamily !== 'generic' && candidateFamily !== 'generic') {
+    return targetFamily === candidateFamily;
+  }
+
+  const targetCategory = (target.category || '').toLowerCase();
+  const candidateCategory = (candidate.category || '').toLowerCase();
+  if (targetCategory && candidateCategory) {
+    return targetCategory === candidateCategory;
+  }
+
+  return sharedProductTerms(target, candidate) > 0;
+}
+
 async function getDbProducts(limit = 250): Promise<DbProduct[]> {
   const rows = await prisma.product.findMany({
     where: { inStock: true },
@@ -126,7 +189,7 @@ export async function semanticSearchProducts(query: string, limit = 12): Promise
     return keywordFallback(query, mapped, limit);
   }
 
-  await syncMissingEmbeddings(products);
+  void syncMissingEmbeddings(products).catch(() => undefined);
   const embedding = await getEmbedding(query);
   if (!embedding) return keywordFallback(query, products, limit);
 
@@ -153,20 +216,33 @@ export async function semanticSearchProducts(query: string, limit = 12): Promise
 export async function completeTheLook(productId: number, limit = 4): Promise<Product[]> {
   try {
     const products = await getDbProducts(300);
-    await syncMissingEmbeddings(products);
+    void syncMissingEmbeddings(products).catch(() => undefined);
+    const target = products.find((product) => product.id === productId);
 
-    const rows = await prisma.$queryRaw<Array<Product>>`
-      SELECT p.id, p.brand, p.title, p.price, p.image, p.rating, p."fullRating" AS "fullRating"
+    if (!target) {
+      return products.filter((product) => product.id !== productId).slice(0, limit);
+    }
+
+    const rows = await prisma.$queryRaw<Array<DbProduct>>`
+      SELECT p.id, p.brand, p.title, p.price, p.image, p.rating, p."fullRating" AS "fullRating", p.description, p.category
       FROM product_embeddings target
       JOIN product_embeddings pe ON pe.product_id <> target.product_id
       JOIN products p ON p.id = pe.product_id
       WHERE target.product_id = ${productId}
       AND p."inStock" = true
       ORDER BY target.embedding <=> pe.embedding
-      LIMIT ${limit}
+      LIMIT ${Math.max(limit * 4, 12)}
     `;
 
-    if (rows.length > 0) return rows;
+    const filteredRows = rows.filter((row) => isRelatedRecommendation(target, row)).slice(0, limit);
+
+    if (filteredRows.length > 0) return filteredRows;
+
+    const relatedFallback = products
+      .filter((product) => isRelatedRecommendation(target, product))
+      .slice(0, limit);
+
+    if (relatedFallback.length > 0) return relatedFallback;
 
     return products.filter((p) => p.id !== productId).slice(0, limit);
   } catch {

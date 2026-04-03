@@ -6,20 +6,34 @@ import Link from 'next/link';
 import { Product } from '@/types';
 import { useCart } from '@/hooks/useCart';
 import Newsletter from '@/components/sections/Newsletter';
-import { PRODUCT_SIZES } from '@/constants';
 import { buildStarClasses, formatPrice } from '@/lib/utils';
+import { getDefaultProductUnit, getProductUnitConfig } from '@/lib/productUnits';
 
-const thumbnailImages = [
-  '/products-img/p2.webp', '/products-img/p3.webp', '/products-img/p4.webp',
-  '/products-img/p1.webp', '/products-img/p5.webp', '/products-img/p6.webp',
-];
+function toSentenceCase(input: string): string {
+  if (!input) return input;
+  return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+}
+
+function resolveProductDescription(product: Product): string {
+  const text = (product.description || '').trim();
+  if (text.length >= 24) return text;
+
+  const category = product.category ? toSentenceCase(product.category) : 'Apparel';
+  return `${category} piece from ${product.brand}, designed for everyday wear and easy styling.`;
+}
 
 export default function ProductDetailClient(
   { product, recommendations = [] }: { product: Product; recommendations?: Product[] },
 ) {
   const [mainImg, setMainImg] = useState(product.image);
+  const [selectedUnit, setSelectedUnit] = useState(getDefaultProductUnit(product));
   const { addItem } = useCart();
   const stars = buildStarClasses(product.fullRating);
+  const productDescription = resolveProductDescription(product);
+  const unitConfig = getProductUnitConfig(product);
+  const thumbnailImages = Array.from(
+    new Set([product.image, ...recommendations.map((item) => item.image)].filter(Boolean)),
+  ).slice(0, 6);
 
   return (
     <>
@@ -33,7 +47,7 @@ export default function ProductDetailClient(
                   <div className="small-img" key={i}>
                     <Image
                       src={src}
-                      alt={`View ${i + 1}`}
+                      alt={`${product.title} view ${i + 1}`}
                       className="smallImg"
                       width={80}
                       height={80}
@@ -47,25 +61,35 @@ export default function ProductDetailClient(
           <div className="box pro-info">
             <h2 className="product-name">{product.title}</h2>
             <h3 className="product-brand">{product.brand}</h3>
+            {product.category && (
+              <p className="product-category">Category: {toSentenceCase(product.category)}</p>
+            )}
             <div className="stars">
               {stars.map((cls, i) => (
                 <i key={i} className={cls} />
               ))}
             </div>
-            <h2 className="product-price">{formatPrice(product.price)}</h2>
-            <select name="size" className="product-size">
-              {PRODUCT_SIZES.map((size) => (
-                <option key={size} value={size}>{size}</option>
-              ))}
-            </select>
+            <div className="product-purchase-row">
+              <h2 className="product-price">{formatPrice(product.price)}</h2>
+              <label className="product-unit-control">
+                <span>{unitConfig.label}</span>
+                <select
+                  name="size"
+                  className="product-size"
+                  value={selectedUnit}
+                  onChange={(e) => setSelectedUnit(e.target.value)}
+                >
+                  {unitConfig.options.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
             <div className="btn-group">
-              <button className="addBtn" onClick={() => addItem(product)}>Add to cart</button>
+              <button className="addBtn" onClick={() => addItem(product, selectedUnit)}>Add to cart</button>
               <Link href="/shop" className="btn">Back to shop</Link>
             </div>
-            <p>
-              Crafted for daily wear, this piece features breathable fabric, a clean silhouette, and elevated finishing.
-              Pair it with relaxed denim, layered outerwear, or minimal sneakers for a versatile city-ready look.
-            </p>
+            <p>{productDescription}</p>
             <div className="kpi-grid" style={{ marginTop: '1rem' }}>
               <div className="kpi-card"><strong>Free</strong><p>Shipping over KES 12,000</p></div>
               <div className="kpi-card"><strong>14 days</strong><p>Easy returns</p></div>
@@ -77,10 +101,10 @@ export default function ProductDetailClient(
       </section>
 
       {recommendations.length > 0 && (
-        <section className="complete-look" aria-label="Complete the look">
+        <section className="complete-look" aria-label="Related products">
           <div className="section-heading">
-            <h2>Complete The Look</h2>
-            <p>AI-picked matches based on style, silhouette, and product context.</p>
+            <h2>Related Products</h2>
+            <p>Picked from the same product family to keep recommendations relevant.</p>
           </div>
           <div className="box-container">
             {recommendations.map((item) => (

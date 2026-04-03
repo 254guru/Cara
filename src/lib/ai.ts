@@ -1,4 +1,6 @@
 const OPENAI_BASE_URL = 'https://api.openai.com/v1';
+const EMBEDDING_TIMEOUT_MS = Number(process.env.OPENAI_EMBEDDING_TIMEOUT_MS || 3500);
+const CHAT_TIMEOUT_MS = Number(process.env.OPENAI_CHAT_TIMEOUT_MS || 6000);
 
 export async function getEmbedding(text: string): Promise<number[] | null> {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -7,6 +9,7 @@ export async function getEmbedding(text: string): Promise<number[] | null> {
   try {
     const resp = await fetch(`${OPENAI_BASE_URL}/embeddings`, {
       method: 'POST',
+      signal: AbortSignal.timeout(EMBEDDING_TIMEOUT_MS),
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
@@ -33,6 +36,7 @@ export async function chatCompletion(input: string, catalogContext: string, hist
   try {
     const resp = await fetch(`${OPENAI_BASE_URL}/responses`, {
       method: 'POST',
+      signal: AbortSignal.timeout(CHAT_TIMEOUT_MS),
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,

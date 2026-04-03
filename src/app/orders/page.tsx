@@ -127,7 +127,7 @@ export default function OrdersPage() {
                       <div className="order-item-info">
                         <p className="order-item-title">{item.product.title}</p>
                         <p className="order-item-meta">
-                          {item.product.brand} &middot; Size {item.size} &middot; Qty {item.quantity}
+                          {item.product.brand} &middot; Option {item.size} &middot; Qty {item.quantity}
                         </p>
                         <p className="order-item-price">{formatPrice(item.price * item.quantity)}</p>
                       </div>

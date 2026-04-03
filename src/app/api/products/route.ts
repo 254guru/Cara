@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get('category');
@@ -32,7 +34,7 @@ export async function GET(req: NextRequest) {
     prisma.product.count({ where }),
   ]);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     products,
     pagination: {
       page,
@@ -41,4 +43,7 @@ export async function GET(req: NextRequest) {
       pages: Math.ceil(total / limit),
     },
   });
+
+  response.headers.set('Cache-Control', 'public, s-maxage=20, stale-while-revalidate=120');
+  return response;
 }

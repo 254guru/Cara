@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
-import { PRODUCT_SIZES, SHIPPING_OPTIONS, PAYMENT_METHODS } from '@/constants';
+import { SHIPPING_OPTIONS, PAYMENT_METHODS } from '@/constants';
 import { formatPrice } from '@/lib/utils';
+import { getProductUnitConfig } from '@/lib/productUnits';
 
 export default function Cart() {
   const { state, removeItem, updateQuantity, updateSize, clearCart, closeCart, total } = useCart();
@@ -106,36 +107,42 @@ export default function Cart() {
           <p className="empty-message">No items yet. Explore products and start building your kit.</p>
         )}
         {state.items.map((item) => (
-          <div className="cart-box" key={item.id}>
-            <Image src={item.image} alt={item.title} width={80} height={80} className="cart-img" />
-            <div className="detail-box">
-              <div className="cart-product-title">{item.title}</div>
-              <div className="cart-price">{formatPrice(item.price)}</div>
-              <div className="cart-size">
-                <select
-                  name="size"
-                  value={item.size}
-                  onChange={(e) => updateSize(item.id, e.target.value)}
-                  aria-label={`Size for ${item.title}`}
-                >
-                  {PRODUCT_SIZES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
+          (() => {
+            const unitConfig = getProductUnitConfig(item);
+
+            return (
+              <div className="cart-box" key={item.id}>
+                <Image src={item.image} alt={item.title} width={80} height={80} className="cart-img" />
+                <div className="detail-box">
+                  <div className="cart-product-title">{item.title}</div>
+                  <div className="cart-price">{formatPrice(item.price)}</div>
+                  <div className="cart-size">
+                    <select
+                      name="size"
+                      value={item.size}
+                      onChange={(e) => updateSize(item.id, e.target.value)}
+                      aria-label={`${unitConfig.label} for ${item.title}`}
+                    >
+                      {unitConfig.options.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    min={1}
+                    className="cart-quantity"
+                    onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
+                    aria-label={`Quantity for ${item.title}`}
+                  />
+                </div>
+                <button className="icon-btn remove-items" onClick={() => removeItem(item.id)} type="button" aria-label={`Remove ${item.title}`}>
+                  <i className="fas fa-trash" />
+                </button>
               </div>
-              <input
-                type="number"
-                value={item.quantity}
-                min={1}
-                className="cart-quantity"
-                onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                aria-label={`Quantity for ${item.title}`}
-              />
-            </div>
-            <button className="icon-btn remove-items" onClick={() => removeItem(item.id)} type="button" aria-label={`Remove ${item.title}`}>
-              <i className="fas fa-trash" />
-            </button>
-          </div>
+            );
+          })()
         ))}
       </div>
       <div className="item-summary">

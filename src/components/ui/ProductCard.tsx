@@ -12,14 +12,15 @@ interface Props {
   linkTo?: string;
 }
 
-export default function ProductCard({ product, showAddToCart = false, linkTo = '/shop' }: Props) {
+export default function ProductCard({ product, showAddToCart = false, linkTo }: Props) {
   const { addItem } = useCart();
   const stars = buildStarClasses(product.fullRating);
+  const href = linkTo || `/shop/${product.id}`;
 
   return (
     <div className={`box${showAddToCart ? ' box-content' : ''}`}>
       <div className="image">
-        <Link href={linkTo} aria-label={`View ${product.title}`}>
+        <Link href={href} aria-label={`View ${product.title}`}>
           <Image
             src={product.image}
             alt={product.title}
@@ -32,7 +33,9 @@ export default function ProductCard({ product, showAddToCart = false, linkTo = '
       </div>
       <div className={`content${showAddToCart ? ' shop-content' : ''}`}>
         <h3>{product.brand}</h3>
-        <p className={showAddToCart ? 'product-title' : ''}>{product.title}</p>
+        <p className={showAddToCart ? 'product-title' : ''}>
+          <Link href={href} aria-label={`View ${product.title} details`}>{product.title}</Link>
+        </p>
         <div className="stars" aria-label={`Rated ${product.rating} out of 5`}>
           {stars.map((cls, i) => <i key={i} className={cls} />)}
         </div>
