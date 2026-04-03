@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Newsletter from '@/components/sections/Newsletter';
-import FeaturesSection from '@/components/sections/FeaturesSection';
+import CategoryStrip from '@/components/sections/CategoryStrip';
+import FlashSale from '@/components/sections/FlashSale';
 import ProductCard from '@/components/ui/ProductCard';
 import { getFeaturedProducts, getNewArrivals } from '@/services/productService';
 import type { Metadata } from 'next';
@@ -9,11 +10,11 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Homepage',
-  description: 'Shop curated everyday pieces with mobile-first browsing, instant cart actions, and weekly style drops.',
+  title: 'Cara | Shop Online – Fashion, Beauty, Electronics & More',
+  description: 'Shop the best deals on fashion, beauty, electronics and more at Cara Stores. Fast delivery, easy returns.',
   openGraph: {
-    title: 'Cara Stores Homepage',
-    description: 'Discover top picks, fresh arrivals, and seasonal collections from Cara Stores.',
+    title: 'Cara Stores – Best Deals Online',
+    description: 'Discover flash deals, top picks, and fresh arrivals every week at Cara Stores.',
     images: ['/banner-img/b2.webp'],
   },
 };
@@ -24,89 +25,63 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="home" id="home">
-        <div className="hero-shell">
-          <div className="content">
-            <span className="pill">2026 Drop</span>
-            <h2>Built for scroll speed</h2>
-            <h1>Dress better, faster</h1>
-            <p>Discover premium essentials curated for movement, comfort, and bold everyday styling.</p>
-            <div className="cta-row">
-              <Link href="/shop" className="btn-primary">Shop collection</Link>
-              <Link href="/about" className="btn-secondary">Our story</Link>
+      {/* Compact promotional hero */}
+      <section className="home-hero">
+        <div className="hero-promo-grid">
+          <div className="hero-main-banner">
+            <div className="hero-banner-content">
+              <span className="pill">Limited Time</span>
+              <h1>Up to <span className="hero-pct">70% off</span> everyday essentials</h1>
+              <p>Fashion, beauty, electronics and more — all in one place.</p>
+              <Link href="/shop" className="btn-primary">Shop now</Link>
             </div>
-            <div className="kpi-grid" aria-label="Store highlights">
-              <div className="kpi-card"><strong>24h</strong><p>Dispatch on most orders</p></div>
-              <div className="kpi-card"><strong>16k+</strong><p>Happy mobile shoppers</p></div>
-              <div className="kpi-card"><strong>4.9/5</strong><p>Average review score</p></div>
-              <div className="kpi-card"><strong>Easy</strong><p>Returns within 14 days</p></div>
-            </div>
+          </div>
+          <div className="hero-side-banners">
+            <Link href="/shop?cat=beauty" className="hero-side-card">
+              <span className="side-badge">Beauty</span>
+              <h3>Skincare, serums & fragrances</h3>
+            </Link>
+            <Link href="/shop?cat=electronics" className="hero-side-card">
+              <span className="side-badge">Electronics</span>
+              <h3>Phones, laptops & gadgets</h3>
+            </Link>
           </div>
         </div>
       </section>
 
-      <FeaturesSection />
+      {/* Category strip */}
+      <CategoryStrip />
 
+      {/* Flash deals with countdown */}
+      <FlashSale products={featuredProducts.slice(0, 8)} />
+
+      {/* Featured products */}
       <section className="products" id="products">
-        <div className="section-heading">
-          <span className="pill">Top Picks</span>
-          <h2>Featured right now</h2>
-          <p>Editor-approved essentials that pair clean lines with all-day comfort.</p>
+        <div className="section-heading section-heading-row">
+          <h2>Top picks for you</h2>
+          <Link href="/shop" className="view-all-link">
+            View all <i className="fas fa-chevron-right" aria-hidden />
+          </Link>
         </div>
         <div className="box-container">
           {featuredProducts.map((p) => (
-            <ProductCard key={p.id} product={p} linkTo={`/shop/${p.id}`} />
+            <ProductCard key={p.id} product={p} linkTo={`/shop/${p.id}`} showAddToCart />
           ))}
         </div>
       </section>
 
-      <section className="banner" id="banner">
-        <div className="content">
-          <span className="pill">Limited Time</span>
-          <h1>Seasonal markdown event</h1>
-          <p>Save up to <span>70% off</span> selected essentials and accessories.</p>
-          <div className="cta-row" style={{ justifyContent: 'center' }}>
-            <Link href="/shop" className="btn">Explore deals</Link>
-          </div>
-        </div>
-      </section>
-
+      {/* New arrivals */}
       <section className="arrivals" id="arrivals">
-        <div className="section-heading">
-          <span className="pill">Just In</span>
-          <h2>New arrivals this week</h2>
-          <p>Fresh silhouettes and color stories dropping every Friday at noon.</p>
+        <div className="section-heading section-heading-row">
+          <h2>New arrivals</h2>
+          <Link href="/shop" className="view-all-link">
+            View all <i className="fas fa-chevron-right" aria-hidden />
+          </Link>
         </div>
         <div className="box-container">
           {newArrivals.map((p) => (
-            <ProductCard key={p.id} product={p} linkTo={`/shop/${p.id}`} />
+            <ProductCard key={p.id} product={p} linkTo={`/shop/${p.id}`} showAddToCart />
           ))}
-        </div>
-      </section>
-
-      <section className="adverts" id="adverts">
-        <div className="ad-container-1">
-          <div className="box ad-1">
-            <div className="content">
-              <h4>Members perk</h4>
-              <h1>Buy 1, get 1 50% off</h1>
-              <p>Stack your wardrobe with bundle pricing on selected pieces.</p>
-              <Link href="/shop" className="ad-btn">Unlock offer</Link>
-            </div>
-          </div>
-          <div className="box ad-2">
-            <div className="content">
-              <h4>Spring / Summer</h4>
-              <h1>Lightweight layers</h1>
-              <p>Ready-to-wear cuts designed for warm city days.</p>
-              <Link href="/shop" className="ad-btn">Shop now</Link>
-            </div>
-          </div>
-        </div>
-        <div className="ad-container-2">
-          <div className="box ad-1"><div className="content"><h1>Season closeout</h1><p>Last chance pieces up to 50% off</p></div></div>
-          <div className="box ad-2"><div className="content"><h1>Footwear capsule</h1><p>Comfort-driven silhouettes in stock now</p></div></div>
-          <div className="box ad-3"><div className="content"><h1>Graphic tees</h1><p>New prints inspired by street culture</p></div></div>
         </div>
       </section>
 

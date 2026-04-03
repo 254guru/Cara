@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Product } from '@/types';
 import { useCart } from '@/hooks/useCart';
 import { buildStarClasses, formatPrice } from '@/lib/utils';
+import { getProductDiscount } from '@/lib/deals';
 
 interface Props {
   product: Product;
@@ -16,10 +17,16 @@ export default function ProductCard({ product, showAddToCart = false, linkTo }: 
   const { addItem } = useCart();
   const stars = buildStarClasses(product.fullRating);
   const href = linkTo || `/shop/${product.id}`;
+  const discount = getProductDiscount(product);
 
   return (
     <div className={`box${showAddToCart ? ' box-content' : ''}`}>
       <div className="image">
+        {discount && (
+          <span className="deal-badge" aria-label={`${discount.pct}% off`}>
+            -{discount.pct}%
+          </span>
+        )}
         <Link href={href} aria-label={`View ${product.title}`}>
           <Image
             src={product.image}
@@ -40,7 +47,12 @@ export default function ProductCard({ product, showAddToCart = false, linkTo }: 
           {stars.map((cls, i) => <i key={i} className={cls} />)}
         </div>
         <div className="price">
-          <h6 id="prices">{formatPrice(product.price)}</h6>
+          <div className="price-stack">
+            <h6 id="prices">{formatPrice(product.price)}</h6>
+            {discount && (
+              <s className="was-price">{formatPrice(discount.wasPrice)}</s>
+            )}
+          </div>
           <button className="icon-btn-small" onClick={() => addItem(product)} type="button" aria-label={`Add ${product.title} to cart`}>
             <i className="fas fa-shopping-bag" />
           </button>
