@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Newsletter from '@/components/sections/Newsletter';
 import CategoryStrip from '@/components/sections/CategoryStrip';
 import FlashSale from '@/components/sections/FlashSale';
@@ -6,8 +7,7 @@ import ProductCard from '@/components/ui/ProductCard';
 import { getFeaturedProducts, getNewArrivals } from '@/services/productService';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Cara | Shop Online – Fashion, Beauty, Electronics & More',
@@ -20,8 +20,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const featuredProducts = await getFeaturedProducts();
-  const newArrivals = await getNewArrivals();
+  const [featuredProducts, newArrivals] = await Promise.all([
+    getFeaturedProducts(),
+    getNewArrivals(),
+  ]);
 
   return (
     <>
@@ -29,6 +31,15 @@ export default async function HomePage() {
       <section className="home-hero">
         <div className="hero-promo-grid">
           <div className="hero-main-banner">
+            <Image
+              src="/banner-img/b2.webp"
+              alt="Cara flash deals"
+              fill
+              priority
+              fetchPriority="high"
+              sizes="(max-width: 719px) 92vw, (max-width: 1120px) 62vw, 720px"
+              className="hero-main-media"
+            />
             <div className="hero-banner-content">
               <span className="pill">Limited Time</span>
               <h1>Up to <span className="hero-pct">70% off</span> everyday essentials</h1>

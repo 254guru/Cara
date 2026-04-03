@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useReducer, useEffect, useCallback, useMemo, useRef, ReactNode } from 'react';
 import { useSession } from 'next-auth/react';
 import { CartItem, Product } from '@/types';
 import { getDefaultProductUnit } from '@/lib/productUnits';
@@ -104,6 +104,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const isLoggedIn = !!session?.user?.id;
 
   const [state, dispatch] = useReducer(cartReducer, { items: [], isOpen: false, syncing: false });
+  const itemsRef = useRef<CartItem[]>(state.items);
+
+  useEffect(() => {
+    itemsRef.current = state.items;
+  }, [state.items]);
 
   const total = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = state.items.reduce((sum, item) => sum + item.quantity, 0);
@@ -133,7 +138,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Persist guest cart to localStorage
   useEffect(() => {
     if (!isLoggedIn) {
-      saveLocalCart(state.items);
+      const persist = () => saveLocalCart(state.items);
+      // Avoid blocking user input with synchronous localStorage writes.
+      const hasIdleCallback = typeof (window as Window & {
+        requestIdleCallback?: typeof window.requestIdleCallback;
+      }).requestIdleCallback === 'function';
+
+      if (hasIdleCallback) {
+        const id = window.requestIdleCallback(persist, { timeout: 1200 });
+        return () => window.cancelIdleCallback(id);
+      }
+      const timer = window.setTimeout(persist, 0);
+      return () => window.clearTimeout(timer);
     }
   }, [state.items, isLoggedIn]);
 
@@ -177,20 +193,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = useCallback(
     (id: number, quantity: number) => {
-      const existing = state.items.find((item) => item.id === id);
+      const existing = itemsRef.current.find((item) => item.id === id);
       dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
       syncToServer('update', { productId: id, quantity, size: existing?.size || 'Standard' });
     },
-    [state.items, syncToServer],
+    [syncToServer],
   );
 
   const updateSize = useCallback(
     (id: number, size: string) => {
-      const existing = state.items.find((item) => item.id === id);
+      const existing = itemsRef.current.find((item) => item.id === id);
       dispatch({ type: 'UPDATE_SIZE', payload: { id, size } });
       syncToServer('update', { productId: id, quantity: existing?.quantity || 1, size });
     },
-    [state.items, syncToServer],
+    [syncToServer],
   );
 
   const clearCart = useCallback(() => {
@@ -199,21 +215,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     saveLocalCart([]);
   }, [syncToServer]);
 
+  const openCart = useCallback(() => dispatch({ type: 'OPEN_CART' }), []);
+  const closeCart = useCallback(() => dispatch({ type: 'CLOSE_CART' }), []);
+
+  const contextValue = useMemo(
+    () => ({
+      state,
+      addItem,
+      removeItem,
+      updateQuantity,
+      updateSize,
+      clearCart,
+      openCart,
+      closeCart,
+      total,
+      itemCount,
+    }),
+    [state, addItem, removeItem, updateQuantity, updateSize, clearCart, openCart, closeCart, total, itemCount],
+  );
+
   return (
-    <CartContext.Provider
-      value={{
-        state,
-        addItem,
-        removeItem,
-        updateQuantity,
-        updateSize,
-        clearCart,
-        openCart: () => dispatch({ type: 'OPEN_CART' }),
-        closeCart: () => dispatch({ type: 'CLOSE_CART' }),
-        total,
-        itemCount,
-      }}
-    >
+    <CartContext.Provider value={contextValue}>
       {children}
     </CartContext.Provider>
   );

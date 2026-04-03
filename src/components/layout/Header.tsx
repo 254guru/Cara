@@ -18,8 +18,12 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const handleScroll = () => { setNavOpen(false); setSearchOpen(false); };
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      // Avoid triggering state updates on every scroll frame when already closed.
+      setNavOpen((prev) => (prev ? false : prev));
+      setSearchOpen((prev) => (prev ? false : prev));
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
